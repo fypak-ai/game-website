@@ -1,0 +1,4 @@
+.store-filters { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+.filter-select { padding: .6rem 1rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: .9rem; }
+.store-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem; margin-bottom: 2rem; }
+@media (max-width: 600px) { .store-filters { flex-direction: column; } }

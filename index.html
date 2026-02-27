@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CodePlay – Plataforma de Desenvolvimento Fictício</title>
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="styles/components.css" />
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="header" id="header">
+    <div class="container header__inner">
+      <a href="index.html" class="logo">
+        <span class="logo__icon">⚡</span>
+        <span class="logo__text">CodePlay</span>
+      </a>
+      <nav class="nav" id="nav">
+        <a href="index.html" class="nav__link active">Home</a>
+        <a href="playground.html" class="nav__link">Playground</a>
+        <a href="store.html" class="nav__link">Loja</a>
+        <a href="community.html" class="nav__link">Comunidade</a>
+        <a href="database.html" class="nav__link">Banco de Dados</a>
+      </nav>
+      <a href="playground.html" class="btn btn--primary">Start Creating Now</a>
+      <button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero__content">
+      <div class="hero__text">
+        <h1 class="hero__title">Crie Apps Fictícios.<br /><span class="gradient-text">Compre. Venda. Jogue.</span></h1>
+        <p class="hero__subtitle">Uma plataforma completa para criar aplicativos imaginários, gerenciar usuários e explorar um ecossistema virtual único.</p>
+        <div class="hero__cta">
+          <a href="playground.html" class="btn btn--primary btn--lg">Criar Agora</a>
+          <a href="store.html" class="btn btn--outline btn--lg">Ver Loja</a>
+        </div>
+        <div class="hero__stats">
+          <div class="stat"><span class="stat__num">10K+</span><span class="stat__label">Usuários</span></div>
+          <div class="stat"><span class="stat__num">5K+</span><span class="stat__label">Apps</span></div>
+          <div class="stat"><span class="stat__num">R$1M+</span><span class="stat__label">Em circulação</span></div>
+        </div>
+      </div>
+      <div class="hero__editor">
+        <div class="editor-window">
+          <div class="editor-window__bar">
+            <span class="dot dot--red"></span>
+            <span class="dot dot--yellow"></span>
+            <span class="dot dot--green"></span>
+            <span class="editor-window__title">app.js</span>
+          </div>
+          <pre class="editor-window__code"><code><span class="kw">const</span> app = <span class="fn">createApp</span>({
+  name: <span class="str">"MeuApp"</span>,
+  price: <span class="num">29.90</span>,
+  category: <span class="str">"Utilitário"</span>,
+  code: <span class="kw">function</span>() {
+    <span class="kw">return</span> <span class="str">"Hello, World!"</span>;
+  }
+});
+
+<span class="fn">store</span>.<span class="fn">publish</span>(app);
+<span class="cm">// ✅ Publicado com sucesso!</span></code></pre>
+        </div>
+      </div>
+    </div>
+    <div class="wave-divider">
+      <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg"><path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" fill="#0f0f1a"/></svg>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features section" id="features">
+    <div class="container">
+      <h2 class="section__title">Funcionalidades</h2>
+      <p class="section__subtitle">Tudo que você precisa para criar, comprar e gerenciar no mundo fictício do CodePlay</p>
+      <div class="features__grid">
+        <div class="feature-card">
+          <div class="feature-card__icon">🗄️</div>
+          <h3>Banco de Dados</h3>
+          <p>Crie e gerencie usuários fictícios com login, senha e perfis completos.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">🏪</div>
+          <h3>App Store</h3>
+          <p>Publique seus apps com logo automático, preço e categoria personalizada.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">💰</div>
+          <h3>Carteira Virtual</h3>
+          <p>Comece com R$1.000 fictícios. Compre apps e gerencie seu saldo em tempo real.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">🚀</div>
+          <h3>Playground</h3>
+          <p>Execute código JavaScript fictício diretamente no navegador, sem instalação.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">👥</div>
+          <h3>Comunidade</h3>
+          <p>Explore apps criados por outros usuários e descubra novas ideias.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">🔐</div>
+          <h3>Autenticação</h3>
+          <p>Sistema de login/senha fictício para simular autenticação segura.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="cta-section section">
+    <div class="container cta-section__inner">
+      <h2>Pronto para começar?</h2>
+      <p>Junte-se a milhares de criadores no mundo fictício do CodePlay.</p>
+      <div class="cta-section__btns">
+        <a href="playground.html" class="btn btn--white btn--lg">Criar meu primeiro app</a>
+        <a href="database.html" class="btn btn--outline-white btn--lg">Ver banco de dados</a>
+      </div>
+      <p class="cta-section__trust">✅ Gratuito • ✅ Sem cadastro • ✅ 100% Fictício</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <a href="index.html" class="logo"><span class="logo__icon">⚡</span><span class="logo__text">CodePlay</span></a>
+        <p>Plataforma de desenvolvimento fictício para aprendizado e diversão.</p>
+      </div>
+      <div class="footer__links">
+        <h4>Navegação</h4>
+        <a href="index.html">Home</a>
+        <a href="playground.html">Playground</a>
+        <a href="store.html">Loja</a>
+        <a href="community.html">Comunidade</a>
+        <a href="database.html">Banco de Dados</a>
+      </div>
+      <div class="footer__newsletter">
+        <h4>Newsletter Fictícia</h4>
+        <p>Receba atualizações do nosso mundo imaginário.</p>
+        <form class="newsletter-form" onsubmit="return false;">
+          <input type="email" placeholder="seu@email.com" class="newsletter-form__input" />
+          <button type="submit" class="btn btn--primary">Inscrever</button>
+        </form>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p>© 2026 CodePlay. Todos os direitos reservados. | Dados 100% fictícios.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

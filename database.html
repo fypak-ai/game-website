@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Banco de Dados – CodePlay</title>
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="styles/components.css" />
+  <link rel="stylesheet" href="styles/database.css" />
+</head>
+<body>
+  <header class="header" id="header">
+    <div class="container header__inner">
+      <a href="index.html" class="logo"><span class="logo__icon">⚡</span><span class="logo__text">CodePlay</span></a>
+      <nav class="nav" id="nav">
+        <a href="index.html" class="nav__link">Home</a>
+        <a href="playground.html" class="nav__link">Playground</a>
+        <a href="store.html" class="nav__link">Loja</a>
+        <a href="community.html" class="nav__link">Comunidade</a>
+        <a href="database.html" class="nav__link active">Banco de Dados</a>
+      </nav>
+      <a href="playground.html" class="btn btn--primary">Start Creating Now</a>
+      <button class="hamburger" id="hamburger">☰</button>
+    </div>
+  </header>
+
+  <main class="page-main container">
+    <h1 class="page-title">🗄️ Banco de Dados Fictício</h1>
+    <p class="page-subtitle">Gerencie usuários e simule autenticação com dados 100% fictícios.</p>
+
+    <!-- Wallet Bar -->
+    <div class="wallet-bar">
+      <span>💰 Carteira: <strong id="walletDisplay">R$ 1.000,00</strong></span>
+      <button class="btn btn--sm btn--outline" onclick="UI.showTab('tab-myapps')">📱 Meus Apps</button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" data-tab="tab-users" onclick="UI.showTab('tab-users')">👤 Usuários</button>
+      <button class="tab" data-tab="tab-login" onclick="UI.showTab('tab-login')">🔐 Simular Login</button>
+      <button class="tab" data-tab="tab-json" onclick="UI.showTab('tab-json')">{ } JSON</button>
+    </div>
+
+    <!-- Tab: Usuários -->
+    <div class="tab-content active" id="tab-users">
+      <div class="db-grid">
+        <div class="db-panel">
+          <h3>➕ Novo Usuário</h3>
+          <form id="userForm" onsubmit="DB.addUser(event)">
+            <div class="form-group">
+              <label>Nome completo</label>
+              <input type="text" id="userName" placeholder="Ex: João Silva" required />
+            </div>
+            <div class="form-group">
+              <label>Login (único)</label>
+              <input type="text" id="userLogin" placeholder="Ex: joao123" required />
+            </div>
+            <div class="form-group">
+              <label>Senha</label>
+              <input type="password" id="userPass" placeholder="Min 4 caracteres" minlength="4" required />
+            </div>
+            <div class="form-group">
+              <label>Email (opcional)</label>
+              <input type="email" id="userEmail" placeholder="joao@exemplo.com" />
+            </div>
+            <button type="submit" class="btn btn--primary btn--full">💾 Salvar Usuário</button>
+          </form>
+          <button class="btn btn--danger btn--full mt" onclick="DB.clearUsers()">🗑️ Limpar Banco</button>
+        </div>
+        <div class="db-panel db-panel--wide">
+          <h3>🔍 Usuários Cadastrados</h3>
+          <input type="text" id="searchUser" placeholder="Buscar por nome ou login..." oninput="DB.searchUsers(this.value)" class="search-input" />
+          <div class="table-wrap">
+            <table class="db-table" id="userTable">
+              <thead>
+                <tr>
+                  <th>ID</th><th>Nome</th><th>Login</th><th>Senha</th><th>Email</th><th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="userTableBody"></tbody>
+            </table>
+            <p class="empty-state" id="userEmpty">Nenhum usuário cadastrado ainda.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: Login -->
+    <div class="tab-content" id="tab-login">
+      <div class="login-sim">
+        <h3>🔐 Simulador de Login</h3>
+        <p>Teste as credenciais dos usuários cadastrados.</p>
+        <form onsubmit="DB.simulateLogin(event)" class="login-form">
+          <div class="form-group">
+            <label>Login</label>
+            <input type="text" id="simLogin" placeholder="Digite o login" required />
+          </div>
+          <div class="form-group">
+            <label>Senha</label>
+            <input type="password" id="simPass" placeholder="Digite a senha" required />
+          </div>
+          <button type="submit" class="btn btn--primary">🚀 Simular Login</button>
+        </form>
+        <div id="loginResult" class="login-result hidden"></div>
+      </div>
+    </div>
+
+    <!-- Tab: JSON -->
+    <div class="tab-content" id="tab-json">
+      <div class="json-panel">
+        <div class="json-panel__header">
+          <h3>{ } Visualização JSON</h3>
+          <button class="btn btn--sm btn--outline" onclick="DB.copyJSON()">📋 Copiar</button>
+        </div>
+        <pre id="jsonView" class="json-view">[]</pre>
+      </div>
+    </div>
+
+    <!-- Tab: Meus Apps -->
+    <div class="tab-content" id="tab-myapps">
+      <h3>📱 Meus Apps</h3>
+      <div id="myAppsGrid" class="apps-grid"></div>
+      <p class="empty-state" id="myAppsEmpty">Você ainda não tem apps. Crie um no Playground!</p>
+    </div>
+  </main>
+
+  <!-- App Modal -->
+  <div class="modal hidden" id="appModal">
+    <div class="modal__overlay" onclick="UI.closeModal()"></div>
+    <div class="modal__content">
+      <button class="modal__close" onclick="UI.closeModal()">✕</button>
+      <h3 id="modalTitle"></h3>
+      <div class="app-runner">
+        <pre id="modalCode" class="app-code"></pre>
+        <button class="btn btn--primary" onclick="AppStore.runApp()">▶ Executar</button>
+        <div id="appOutput" class="app-output hidden"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer__bottom"><p>© 2026 CodePlay. Dados 100% fictícios.</p></div>
+  </footer>
+
+  <script src="js/state.js"></script>
+  <script src="js/database.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

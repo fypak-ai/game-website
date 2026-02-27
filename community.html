@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comunidade – CodePlay</title>
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="styles/components.css" />
+</head>
+<body>
+  <header class="header" id="header">
+    <div class="container header__inner">
+      <a href="index.html" class="logo"><span class="logo__icon">⚡</span><span class="logo__text">CodePlay</span></a>
+      <nav class="nav" id="nav">
+        <a href="index.html" class="nav__link">Home</a>
+        <a href="playground.html" class="nav__link">Playground</a>
+        <a href="store.html" class="nav__link">Loja</a>
+        <a href="community.html" class="nav__link active">Comunidade</a>
+        <a href="database.html" class="nav__link">Banco de Dados</a>
+      </nav>
+      <a href="playground.html" class="btn btn--primary">Start Creating Now</a>
+      <button class="hamburger" id="hamburger">☰</button>
+    </div>
+  </header>
+
+  <main class="page-main container">
+    <h1 class="page-title">👥 Comunidade CodePlay</h1>
+
+    <section class="community-stats section">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-card__num">10K+</div><div>Usuários Fictícios</div></div>
+        <div class="stat-card"><div class="stat-card__num">5K+</div><div>Apps Criados</div></div>
+        <div class="stat-card"><div class="stat-card__num">R$1M+</div><div>Em circulação virtual</div></div>
+        <div class="stat-card"><div class="stat-card__num">99.9%</div><div>Uptime Fictício</div></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>🏆 Top Desenvolvedores (Fictícios)</h2>
+      <div class="leaderboard" id="leaderboard"></div>
+    </section>
+
+    <section class="section">
+      <h2>🔥 Apps em Destaque</h2>
+      <div id="featuredApps" class="apps-grid"></div>
+      <p class="empty-state" id="featuredEmpty">Nenhum app criado ainda. <a href="playground.html">Seja o primeiro!</a></p>
+    </section>
+
+    <section class="cta-section section">
+      <div class="cta-section__inner container">
+        <h2>Faça parte da comunidade</h2>
+        <p>Crie apps, compre, venda e explore o universo fictício do CodePlay.</p>
+        <div class="cta-section__btns">
+          <a href="playground.html" class="btn btn--white btn--lg">Criar App</a>
+          <a href="store.html" class="btn btn--outline-white btn--lg">Explorar Loja</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__bottom"><p>© 2026 CodePlay. Dados 100% fictícios.</p></div>
+  </footer>
+
+  <script src="js/state.js"></script>
+  <script src="js/community.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

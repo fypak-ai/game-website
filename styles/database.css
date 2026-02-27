@@ -1,0 +1,23 @@
+.db-grid { display: grid; grid-template-columns: 320px 1fr; gap: 1.5rem; }
+.db-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
+.db-panel h3 { margin-bottom: 1.25rem; font-size: 1.05rem; }
+.db-panel--wide { overflow: hidden; }
+.table-wrap { overflow-x: auto; }
+.db-table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+.db-table th, .db-table td { padding: .6rem .9rem; border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; }
+.db-table th { color: var(--text-muted); font-weight: 600; background: var(--surface2); }
+.db-table tbody tr:hover { background: var(--surface2); }
+.pass-cell { display: flex; align-items: center; gap: .5rem; }
+.pass-toggle { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: .85rem; }
+.login-sim { max-width: 480px; margin: 0 auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; }
+.login-sim h3 { margin-bottom: .5rem; }
+.login-sim p { color: var(--text-muted); font-size: .9rem; margin-bottom: 1.5rem; }
+.login-form { margin-bottom: 1rem; }
+.login-result { padding: 1rem; border-radius: 8px; margin-top: 1rem; font-weight: 600; }
+.login-result.success { background: rgba(34,197,94,.15); border: 1px solid var(--success); color: var(--success); }
+.login-result.error { background: rgba(239,68,68,.15); border: 1px solid var(--danger); color: var(--danger); }
+.json-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.json-panel__header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); }
+.json-view { background: #0d1117; padding: 1.5rem; font-size: .85rem; color: #e6edf3; overflow: auto; max-height: 400px; font-family: monospace; }
+.apps-mini-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: .75rem; }
+@media (max-width: 768px) { .db-grid { grid-template-columns: 1fr; } }
