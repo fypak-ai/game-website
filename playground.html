@@ -26,35 +26,43 @@
 
   <main class="page-main container">
     <h1 class="page-title">🚀 Playground</h1>
-    <p class="page-subtitle">Crie seu app fictício, defina preço, logo automático e publique na loja!</p>
+    <p class="page-subtitle">Cole qualquer código real — o site detecta automaticamente o tipo de programa e cria um app fictício com nome e ícone temáticos!</p>
 
     <div class="wallet-bar">
       <span>💰 Carteira: <strong id="walletDisplay">R$ 1.000,00</strong></span>
     </div>
 
+    <!-- Auto-detect banner (hidden until real code is pasted) -->
+    <div id="detectBanner" class="detect-banner hidden"></div>
+
     <div class="playground-layout">
       <!-- App Creator -->
       <div class="creator-panel">
         <h3>🛠️ Criar App</h3>
-        <form id="appForm" onsubmit="AppStore.createApp(event)">
+
+        <div class="detect-hint">
+          <span>💡 <strong>Dica:</strong> Cole código real (calculadora, jogo, chat, etc.) e o app será configurado automaticamente!</span>
+        </div>
+
+        <form id="appForm">
           <div class="form-group">
-            <label>Nome do App</label>
-            <input type="text" id="appName" placeholder="Ex: SuperCalc" required maxlength="30" />
+            <label>Nome do App <span class="auto-label" id="autoNameLabel" style="display:none">✨ auto</span></label>
+            <input type="text" id="appName" placeholder="Ex: SuperCalc (ou deixe automático)" required maxlength="40" />
           </div>
           <div class="logo-preview-box">
             <span>Logo: </span>
             <div id="appLogoPreview" class="logo-preview">?</div>
           </div>
           <div class="form-group">
-            <label>Descrição</label>
-            <textarea id="appDesc" placeholder="O que seu app faz?" rows="3" required></textarea>
+            <label>Descrição <span class="auto-label" id="autoDescLabel" style="display:none">✨ auto</span></label>
+            <textarea id="appDesc" placeholder="O que seu app faz? (ou deixe automático)" rows="3" required></textarea>
           </div>
           <div class="form-group">
             <label>Preço (R$)</label>
             <input type="number" id="appPrice" min="0" step="0.01" value="9.90" required />
           </div>
           <div class="form-group">
-            <label>Categoria</label>
+            <label>Categoria <span class="auto-label" id="autoCatLabel" style="display:none">✨ auto</span></label>
             <select id="appCategory">
               <option value="Utilitário">Utilitário</option>
               <option value="Jogo">Jogo</option>
@@ -65,10 +73,12 @@
             </select>
           </div>
           <div class="form-group">
-            <label>Código JavaScript (fictício)</label>
-            <textarea id="appCode" rows="8" placeholder="// Seu código aqui
+            <label>Código JavaScript <span class="code-tip">← cole código real aqui para detecção automática</span></label>
+            <textarea id="appCode" rows="12" placeholder="// Cole qualquer código real ou escreva seu próprio!
+// Ex: calculadora, jogo, chat, to-do list...
+
 function main() {
-  return 'Hello World!';
+  return 'Hello, World!';
 }">function main() {
   return 'Hello, World!';
 }</textarea>
@@ -81,8 +91,9 @@ function main() {
       <!-- My Apps -->
       <div class="my-apps-panel">
         <h3>📱 Meus Apps Criados</h3>
+        <p class="panel-sub">Apps que você publicou aparecem aqui e na <a href="store.html">Loja</a>.</p>
         <div id="createdAppsGrid" class="apps-mini-grid"></div>
-        <p class="empty-state" id="createdEmpty">Nenhum app criado ainda.</p>
+        <p class="empty-state" id="createdEmpty">Nenhum app criado ainda.<br/><small>Cole um código no formulário ao lado!</small></p>
       </div>
     </div>
   </main>
