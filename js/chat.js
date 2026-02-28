@@ -219,7 +219,7 @@ function generateChatMissions() {
     ...m,
     instanceId: m.id + '_' + Date.now(),
     startedAt: Date.now(),
-    deadline: Date.now() + 60 * 1000, // 1 minuto fixo
+    deadline: Date.now() + m.time * 1000,
     status: 'available',
   }));
   s.accepted = s.accepted || [];
@@ -245,7 +245,7 @@ function renderSidebar() {
 
 function renderSidebarMissions() {
   const s = CS.s;
-  const missions = (s.currentMissions || []).filter(m => m.status === 'available' && Date.now() < m.deadline);
+  const missions = (s.currentMissions || []).filter(m => m.status === 'available');
   const el = document.getElementById('sidebarMissions');
   if (!el) return;
   if (!missions.length) {
@@ -281,13 +281,9 @@ function renderAccepted() {
   if (!accepted.length) { el.innerHTML = '<p class="empty-hint">Nenhuma missão aceita ainda.</p>'; return; }
   el.innerHTML = accepted.map(m => {
     const verified = checkVerified(m);
-    const rem = Math.max(0, Math.floor((m.deadline - Date.now()) / 1000));
-    const mm = String(Math.floor(rem/60)).padStart(2,'0');
-    const ss = String(rem%60).padStart(2,'0');
     return `<div class="accepted-card ${verified ? 'accepted-card--ready' : ''}">
       <div class="ac-head">
         <span>${m.icon} <strong>${m.title}</strong></span>
-        <span class="smc-timer">⏱ ${mm}:${ss}</span>
       </div>
       <div class="ac-foot">
         <a href="${m.link}" class="btn btn--sm btn--outline">Ir →</a>
@@ -455,15 +451,6 @@ function missionCycleTick() {
   if (!s.nextMission || Date.now() >= s.nextMission) {
     generateChatMissions();
   }
-  // Auto-expire available missions past deadline
-  let changed = false;
-  (s.currentMissions || []).forEach(m => {
-    if (m.status === 'available' && Date.now() > m.deadline) {
-      m.status = 'expired';
-      changed = true;
-    }
-  });
-  if (changed) CS.save(s);
   renderSidebarMissions();
   renderAccepted();
 }
