@@ -6,6 +6,31 @@
   <title>Comunidade – CodePlay</title>
   <link rel="stylesheet" href="styles/main.css" />
   <link rel="stylesheet" href="styles/components.css" />
+<script>
+// Nav Auth Guard — runs before render to avoid flash
+(function(){
+  function isLoggedIn(){
+    try{ var u=JSON.parse(localStorage.getItem('cp_currentUser')||'null'); return !!(u&&(u.username||u.name)); }catch{return false;}
+  }
+  var loggedIn = isLoggedIn();
+  if(!loggedIn){
+    var s=document.createElement('style');
+    s.id='nav-guard-style';
+    s.textContent='.nav__link:not([href="index.html"]):not(.nav__guard-login){display:none!important;}.nav__guard-login{display:inline-flex!important;}';
+    document.head.appendChild(s);
+  }
+  // expose for other scripts
+  window._cpLoggedIn = loggedIn;
+})();
+</script>
+<script>
+(function(){
+  function isLoggedIn(){
+    try{ var u=JSON.parse(localStorage.getItem('cp_currentUser')||'null'); return !!(u&&(u.username||u.name)); }catch{return false;}
+  }
+  if(!isLoggedIn()){ window.location.replace('account.html'); }
+})();
+</script>
 </head>
 <body>
   <header class="header" id="header">
