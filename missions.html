@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Missões – CodePlay</title>
+<link rel="stylesheet" href="styles/main.css"/>
+<link rel="stylesheet" href="styles/components.css"/>
+<link rel="stylesheet" href="styles/missions.css"/>
+</head>
+<body>
+<header class="header" id="header">
+  <div class="container header__inner">
+    <a href="index.html" class="logo"><span class="logo__icon">⚡</span><span class="logo__text">CodePlay</span></a>
+    <nav class="nav" id="nav">
+      <a href="index.html" class="nav__link">Home</a>
+      <a href="playground.html" class="nav__link">Playground</a>
+      <a href="store.html" class="nav__link">Loja</a>
+      <a href="community.html" class="nav__link">Comunidade</a>
+      <a href="database.html" class="nav__link">Banco de Dados</a>
+      <a href="hacker.html" class="nav__link">Hacker</a>
+      <a href="simuladores.html" class="nav__link">Simuladores</a>
+      <a href="missions.html" class="nav__link active">Missões</a>
+      <a href="account.html" class="nav__link">Conta</a>
+    </nav>
+    <a href="playground.html" class="btn btn--primary">Start Creating Now</a>
+    <button class="hamburger" id="hamburger">☰</button>
+  </div>
+</header>
+
+<main class="page-main container">
+  <div class="missions-header">
+    <div>
+      <h1 class="page-title">🎯 Central de Missões</h1>
+      <p class="page-subtitle">Complete missões a cada 5 minutos para ganhar XP e dinheiro. Quanto mais difícil, maior a recompensa!</p>
+    </div>
+    <div class="player-hud">
+      <div class="hud-stat"><span class="hud-val" id="hudUsername">Visitante</span><small>Jogador</small></div>
+      <div class="hud-stat"><span class="hud-val text-gold" id="hudWallet">R$ 1.000,00</span><small>Carteira</small></div>
+      <div class="hud-stat"><span class="hud-val text-purple" id="hudXP">0 XP</span><small>Experiência</small></div>
+      <div class="hud-stat"><span class="hud-val text-blue" id="hudLevel">Nível 1</span><small>Ranking</small></div>
+    </div>
+  </div>
+
+  <!-- Timer + próxima missão -->
+  <div class="mission-timer-bar">
+    <div class="timer-info">
+      <span class="timer-label">⏰ Próximas missões em:</span>
+      <span class="timer-count" id="timerCount">05:00</span>
+    </div>
+    <div class="timer-progress-track"><div class="timer-progress-fill" id="timerFill"></div></div>
+    <button class="btn btn--sm btn--primary" id="btnRefreshNow" onclick="Missions.refreshNow()">🔄 Gerar Agora</button>
+  </div>
+
+  <!-- Active missions -->
+  <div class="missions-section">
+    <h2>🔥 Missões Ativas <span class="badge-count" id="activeBadge">0</span></h2>
+    <div class="missions-grid" id="activeMissions"></div>
+  </div>
+
+  <!-- Completed missions log -->
+  <div class="missions-section">
+    <h2>✅ Concluídas <span class="badge-count" id="doneBadge">0</span></h2>
+    <div class="missions-log" id="completedLog">
+      <p class="empty-hint">Nenhuma missão concluída ainda. Comece agora!</p>
+    </div>
+  </div>
+
+  <!-- XP Progress bar -->
+  <div class="xp-section">
+    <div class="xp-header">
+      <span>🌟 Progresso do Nível</span>
+      <span id="xpProgress">0 / 500 XP para nível 2</span>
+    </div>
+    <div class="xp-track"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+  </div>
+
+  <!-- Leaderboard -->
+  <div class="missions-section">
+    <h2>🏆 Leaderboard de Missões</h2>
+    <div class="leaderboard-list" id="leaderboard"></div>
+  </div>
+</main>
+
+<div class="reward-popup hidden" id="rewardPopup">
+  <div class="reward-popup__inner">
+    <div class="reward-popup__icon" id="popupIcon">🎉</div>
+    <h3 id="popupTitle">Missão Concluída!</h3>
+    <p id="popupDesc"></p>
+    <div class="reward-popup__rewards" id="popupRewards"></div>
+    <button class="btn btn--primary" onclick="Missions.closePopup()">Continuar →</button>
+  </div>
+</div>
+<div class="overlay hidden" id="overlay" onclick="Missions.closePopup()"></div>
+
+<footer class="footer"><div class="footer__bottom"><p>© 2026 CodePlay.</p></div></footer>
+<script src="js/missions.js"></script>
+<script src="js/main.js"></script>
+</body></html>
