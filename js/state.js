@@ -134,7 +134,7 @@ const AppStore = {
     const modal = document.getElementById('appModal');
     const app = modal?._currentApp;
     if (!app) return;
-    // ── Special launch-URL apps (open full page in iframe) ──
+    // ── Special launch-URL apps ──
     if (app.launchUrl) {
       const frameEl = document.getElementById('appFrame');
       const outEl   = document.getElementById('appOutput');
@@ -148,20 +148,80 @@ const AppStore = {
       }
       return;
     }
-    // ── Regular JS apps ──────────────────────────────────────
+    // ── Regular JS apps — sandbox iframe approach ──
     const output = document.getElementById('appOutput');
+    const frameEl = document.getElementById('appFrame');
     if (!output) return;
-    try {
-      const logs = [];
-      const fn = new Function('console', app.code + '\nreturn typeof main === "function" ? main() : undefined;');
-      const fake = { log: (...a) => logs.push(a.join(' ')), error: (...a) => logs.push('[ERR] ' + a.join(' ')) };
-      const ret = fn(fake);
-      if (ret !== undefined) logs.push('→ ' + JSON.stringify(ret));
-      output.textContent = logs.join('\n') || '(sem saída)';
-    } catch (err) {
-      output.textContent = '❌ Erro: ' + err.message;
+
+    const code = app.code || '';
+
+    // Detect non-JS content
+    const trimmed = code.trim();
+    if (trimmed.startsWith('<') || /<\/(html|head|body|div|script)/i.test(trimmed)) {
+      output.textContent = '⚠️ Este app contém HTML — apenas JavaScript pode ser executado aqui.';
+      output.classList.remove('hidden');
+      return;
     }
-    output.classList.remove('hidden');
+    if (/^\s*import\s+/m.test(code) || /^\s*export\s+/m.test(code)) {
+      output.textContent = '⚠️ Este app usa módulos ES (import/export) que não são suportados no sandbox. Remova as instruções import/export para executar.';
+      output.classList.remove('hidden');
+      return;
+    }
+
+    // Use sandboxed blob iframe for safe execution
+    const logs = [];
+    const html = `<!DOCTYPE html><html><body><script>
+const _logs = [];
+const _console = {
+  log: (...a) => _logs.push(a.map(x => typeof x === 'object' ? JSON.stringify(x) : String(x)).join(' ')),
+  error: (...a) => _logs.push('[ERR] ' + a.join(' ')),
+  warn: (...a) => _logs.push('[WARN] ' + a.join(' ')),
+};
+try {
+  (function(console) {
+${code}
+const _ret = typeof main === 'function' ? main() : undefined;
+if (_ret !== undefined) _logs.push('→ ' + JSON.stringify(_ret));
+  })(_console);
+} catch(e) {
+  _logs.push('❌ Erro: ' + e.message);
+}
+window.parent.postMessage({ type: 'cp_run_result', logs: _logs }, '*');
+<\/script></body></html>`;
+
+    // Listen for result
+    const onMsg = (e) => {
+      if (!e.data || e.data.type !== 'cp_run_result') return;
+      window.removeEventListener('message', onMsg);
+      output.textContent = e.data.logs.join('\n') || '(sem saída)';
+      output.classList.remove('hidden');
+      if (frameEl) { frameEl.classList.add('hidden'); frameEl.src = ''; }
+    };
+    window.addEventListener('message', onMsg);
+
+    // Cleanup listener after 5s in case message never arrives
+    setTimeout(() => { window.removeEventListener('message', onMsg); }, 5000);
+
+    if (frameEl) {
+      const blob = new Blob([html], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      frameEl.classList.remove('hidden');
+      frameEl.style.cssText = 'display:none;';
+      frameEl.src = url;
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+    } else {
+      // Fallback: new Function
+      try {
+        const fn = new Function('console', code + '\nreturn typeof main === "function" ? main() : undefined;');
+        const fake = { log: (...a) => logs.push(a.join(' ')), error: (...a) => logs.push('[ERR] ' + a.join(' ')) };
+        const ret = fn(fake);
+        if (ret !== undefined) logs.push('→ ' + JSON.stringify(ret));
+        output.textContent = logs.join('\n') || '(sem saída)';
+      } catch (err) {
+        output.textContent = '❌ Erro: ' + err.message;
+      }
+      output.classList.remove('hidden');
+    }
   }
 };
 
