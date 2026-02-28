@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Chat Mundial – CodePlay</title>
+<link rel="stylesheet" href="styles/main.css"/>
+<link rel="stylesheet" href="styles/components.css"/>
+<link rel="stylesheet" href="styles/chat.css"/>
+</head>
+<body>
+<header class="header" id="header">
+  <div class="container header__inner">
+    <a href="index.html" class="logo"><span class="logo__icon">⚡</span><span class="logo__text">CodePlay</span></a>
+    <nav class="nav" id="nav">
+      <a href="index.html" class="nav__link">Home</a>
+      <a href="playground.html" class="nav__link">Playground</a>
+      <a href="store.html" class="nav__link">Loja</a>
+      <a href="community.html" class="nav__link">Comunidade</a>
+      <a href="database.html" class="nav__link">Banco de Dados</a>
+      <a href="hacker.html" class="nav__link">Hacker</a>
+      <a href="simuladores.html" class="nav__link">Simuladores</a>
+      <a href="dashboard.html" class="nav__link">Dashboard</a>
+      <a href="missions.html" class="nav__link">Missões</a>
+      <a href="chat.html" class="nav__link active">Chat</a>
+      <a href="account.html" class="nav__link">Conta</a>
+    </nav>
+    <a href="playground.html" class="btn btn--primary">Start Creating Now</a>
+    <button class="hamburger" id="hamburger">☰</button>
+  </div>
+</header>
+
+<main class="page-main container">
+  <div class="chat-layout">
+
+    <!-- LEFT: Chat feed -->
+    <div class="chat-panel">
+      <div class="chat-header">
+        <div class="chat-header__left">
+          <span class="chat-world-icon">🌐</span>
+          <div>
+            <h2>Mundo CodePlay</h2>
+            <span class="chat-online" id="chatOnline">● Mundo ativo</span>
+          </div>
+        </div>
+        <div class="chat-header__right">
+          <span class="chat-pulse" id="chatPulse">📡</span>
+        </div>
+      </div>
+
+      <div class="chat-feed" id="chatFeed">
+        <!-- messages injected here -->
+      </div>
+
+      <div class="chat-input-row">
+        <span class="chat-avatar-input" id="inputAvatar">👤</span>
+        <input type="text" id="chatInput" class="chat-input" placeholder="Digite uma mensagem para o mundo..." maxlength="200"/>
+        <button class="btn btn--primary btn--sm" onclick="Chat.send()">Enviar</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: Mission panel -->
+    <div class="mission-sidebar">
+      <div class="mission-sidebar__header">
+        <h3>🎯 Missões em Andamento</h3>
+        <div class="mission-next-timer">
+          Nova missão em <span id="sidebarTimer">--:--</span>
+        </div>
+      </div>
+
+      <div id="sidebarMissions" class="sidebar-missions-list">
+        <!-- mission cards injected here -->
+      </div>
+
+      <div class="accepted-section">
+        <h4>✅ Missões Aceitas</h4>
+        <div id="acceptedList" class="accepted-list">
+          <p class="empty-hint">Nenhuma missão aceita ainda.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- Reward popup -->
+<div class="overlay hidden" id="overlay" onclick="Chat.closePopup()"></div>
+<div class="reward-popup hidden" id="rewardPopup">
+  <div class="popup-icon" id="popupIcon">🏆</div>
+  <h2>Missão Concluída!</h2>
+  <p id="popupDesc"></p>
+  <div id="popupRewards"></div>
+  <button class="btn btn--primary" onclick="Chat.closePopup()">Continuar</button>
+</div>
+
+<script src="js/state.js"></script>
+<script src="js/chat.js"></script>
+</body>
+</html>
