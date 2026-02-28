@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Meu Dashboard – CodePlay</title>
+<link rel="stylesheet" href="styles/main.css"/>
+<link rel="stylesheet" href="styles/components.css"/>
+<link rel="stylesheet" href="styles/dashboard.css"/>
+</head>
+<body>
+<header class="header" id="header">
+  <div class="container header__inner">
+    <a href="index.html" class="logo"><span class="logo__icon">⚡</span><span class="logo__text">CodePlay</span></a>
+    <nav class="nav" id="nav">
+      <a href="index.html" class="nav__link">Home</a>
+      <a href="playground.html" class="nav__link">Playground</a>
+      <a href="store.html" class="nav__link">Loja</a>
+      <a href="community.html" class="nav__link">Comunidade</a>
+      <a href="database.html" class="nav__link">Banco de Dados</a>
+      <a href="hacker.html" class="nav__link">Hacker</a>
+      <a href="simuladores.html" class="nav__link">Simuladores</a>
+      <a href="missions.html" class="nav__link">Missões</a>
+      <a href="dashboard.html" class="nav__link active">Dashboard</a>
+      <a href="account.html" class="nav__link">Conta</a>
+    </nav>
+    <a href="playground.html" class="btn btn--primary">Start Creating Now</a>
+    <button class="hamburger" id="hamburger">☰</button>
+  </div>
+</header>
+
+<main class="page-main container" id="mainContent">
+
+  <!-- NOT LOGGED IN -->
+  <div id="notLogged" class="not-logged hidden">
+    <div class="not-logged__inner">
+      <div style="font-size:4rem">🔐</div>
+      <h2>Faça login para ver seu Dashboard</h2>
+      <p>Seu Dashboard pessoal mostra seus apps, ferramentas, saldo e missões concluídas — sincronizado em qualquer dispositivo.</p>
+      <a href="account.html" class="btn btn--primary btn--lg">Criar conta / Entrar →</a>
+    </div>
+  </div>
+
+  <!-- LOGGED IN -->
+  <div id="dashContent" class="hidden">
+
+    <!-- Hero profile bar -->
+    <div class="dash-hero">
+      <div class="dash-hero__avatar" id="dAvatar">👤</div>
+      <div class="dash-hero__info">
+        <h1 id="dUsername">Jogador</h1>
+        <p id="dEmail" class="text-muted"></p>
+        <p class="dash-since">Membro desde <span id="dSince"></span></p>
+      </div>
+      <div class="dash-stats">
+        <div class="dash-stat">
+          <span id="dWallet" class="dash-stat__val text-gold">R$ 0</span>
+          <small>Carteira</small>
+        </div>
+        <div class="dash-stat">
+          <span id="dLevel" class="dash-stat__val text-purple">Nível 1</span>
+          <small>Nível</small>
+        </div>
+        <div class="dash-stat">
+          <span id="dXP" class="dash-stat__val text-blue">0 XP</span>
+          <small>Experiência</small>
+        </div>
+        <div class="dash-stat">
+          <span id="dAppsCount" class="dash-stat__val">0</span>
+          <small>Apps</small>
+        </div>
+        <div class="dash-stat">
+          <span id="dToolsCount" class="dash-stat__val">0</span>
+          <small>Ferramentas</small>
+        </div>
+        <div class="dash-stat">
+          <span id="dMissionsCount" class="dash-stat__val text-gold">0</span>
+          <small>Missões ✅</small>
+        </div>
+      </div>
+      <button class="btn btn--sm btn--danger-outline" id="btnLogout">Sair</button>
+    </div>
+
+    <!-- XP Bar -->
+    <div class="xp-section" style="margin-bottom:2rem">
+      <div class="xp-header"><span>🌟 Progresso</span><span id="dXPProgress"></span></div>
+      <div class="xp-track"><div class="xp-fill" id="dXPFill" style="width:0%"></div></div>
+    </div>
+
+    <!-- Quick actions -->
+    <div class="dash-quick-actions">
+      <a href="playground.html" class="quick-action">
+        <span>⚡</span><strong>Playground</strong><small>Criar apps</small>
+      </a>
+      <a href="missions.html" class="quick-action">
+        <span>🎯</span><strong>Missões</strong><small>Ganhar XP</small>
+      </a>
+      <a href="store.html" class="quick-action">
+        <span>🛒</span><strong>Loja</strong><small>Comprar apps</small>
+      </a>
+      <a href="hacker.html" class="quick-action">
+        <span>☠️</span><strong>Hacker Lab</strong><small>Ferramentas</small>
+      </a>
+      <a href="simuladores.html" class="quick-action">
+        <span>🎛️</span><strong>Simuladores</strong><small>Executar</small>
+      </a>
+    </div>
+
+    <!-- My Apps -->
+    <div class="dash-section">
+      <div class="dash-section__head">
+        <h2>📱 Meus Apps <span class="badge-count" id="appsBadge">0</span></h2>
+        <a href="playground.html" class="btn btn--sm btn--primary">+ Criar App</a>
+      </div>
+      <div id="dashAppsGrid" class="dash-apps-grid"></div>
+      <p class="empty-hint hidden" id="dashAppsEmpty">Nenhum app criado ainda. <a href="playground.html">Criar agora →</a></p>
+    </div>
+
+    <!-- My Hack Tools -->
+    <div class="dash-section">
+      <div class="dash-section__head">
+        <h2>☠️ Ferramentas Hacker <span class="badge-count" id="toolsBadge">0</span></h2>
+        <a href="hacker.html" class="btn btn--sm" style="background:#ef444420;border:1px solid #ef444440;color:#ef4444">+ Criar Ferramenta</a>
+      </div>
+      <div id="dashToolsGrid" class="dash-tools-grid"></div>
+      <p class="empty-hint hidden" id="dashToolsEmpty">Nenhuma ferramenta ainda. <a href="hacker.html">Hacker Lab →</a></p>
+    </div>
+
+    <!-- Purchased apps -->
+    <div class="dash-section">
+      <div class="dash-section__head">
+        <h2>🛒 Apps Comprados <span class="badge-count" id="purchBadge">0</span></h2>
+        <a href="store.html" class="btn btn--sm">Ir à Loja →</a>
+      </div>
+      <div id="dashPurchGrid" class="dash-apps-grid"></div>
+      <p class="empty-hint hidden" id="dashPurchEmpty">Nenhuma compra ainda.</p>
+    </div>
+
+    <!-- Mission log -->
+    <div class="dash-section">
+      <div class="dash-section__head">
+        <h2>🏆 Histórico de Missões <span class="badge-count" id="missBadge">0</span></h2>
+        <a href="missions.html" class="btn btn--sm">Ver Missões →</a>
+      </div>
+      <div id="dashMissLog" class="missions-log-mini"></div>
+      <p class="empty-hint hidden" id="dashMissEmpty">Nenhuma missão concluída.</p>
+    </div>
+
+  </div>
+</main>
+
+<footer class="footer"><div class="footer__bottom"><p>© 2026 CodePlay.</p></div></footer>
+<script src="js/api.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/main.js"></script>
+</body></html>

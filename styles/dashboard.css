@@ -1,0 +1,72 @@
+
+/* ── Not logged ───────────────────────────────────────────────── */
+.not-logged { display: flex; justify-content: center; padding: 5rem 1rem; }
+.not-logged__inner { text-align: center; max-width: 400px; }
+.not-logged__inner h2 { margin: 1rem 0 .5rem; }
+.not-logged__inner p { color: var(--text-muted); margin-bottom: 1.5rem; }
+.btn--lg { padding: .75rem 2rem; font-size: 1rem; }
+
+/* ── Hero ─────────────────────────────────────────────────────── */
+.dash-hero { display: flex; align-items: center; gap: 1.25rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.dash-hero__avatar { font-size: 3.5rem; }
+.dash-hero__info h1 { font-size: 1.4rem; margin-bottom: .1rem; }
+.dash-since { font-size: .75rem; color: var(--text-muted); margin: 0; }
+.dash-stats { display: flex; gap: .75rem; flex-wrap: wrap; margin-left: auto; }
+.dash-stat { text-align: center; background: var(--surface2); border-radius: 8px; padding: .5rem .9rem; min-width: 75px; }
+.dash-stat__val { display: block; font-size: 1rem; font-weight: 700; }
+.dash-stat small { font-size: .7rem; color: var(--text-muted); }
+.text-gold { color: #f59e0b; }
+.text-purple { color: #a855f7; }
+.text-blue { color: #3b82f6; }
+.btn--danger-outline { background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3); color: #ef4444; }
+.btn--danger-outline:hover { background: rgba(239,68,68,.25); }
+
+/* ── Quick actions ────────────────────────────────────────────── */
+.dash-quick-actions { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 2rem; }
+.quick-action { display: flex; flex-direction: column; align-items: center; gap: .25rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; text-decoration: none; color: var(--text); transition: var(--transition); min-width: 90px; }
+.quick-action span { font-size: 1.75rem; }
+.quick-action strong { font-size: .85rem; }
+.quick-action small { font-size: .72rem; color: var(--text-muted); }
+.quick-action:hover { border-color: var(--primary); background: var(--surface2); transform: translateY(-2px); }
+
+/* ── Section ──────────────────────────────────────────────────── */
+.dash-section { margin-bottom: 2.5rem; }
+.dash-section__head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: .5rem; }
+.dash-section__head h2 { font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; gap: .4rem; margin: 0; }
+.badge-count { background: var(--primary); color: #fff; border-radius: 99px; padding: .1rem .45rem; font-size: .72rem; font-weight: 700; }
+.empty-hint { color: var(--text-muted); font-size: .9rem; padding: .5rem 0; }
+.empty-hint a { color: var(--primary); text-decoration: none; }
+
+/* ── App cards ────────────────────────────────────────────────── */
+.dash-apps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: .9rem; }
+.dash-app-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; display: flex; align-items: flex-start; gap: .75rem; position: relative; }
+.dash-app-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--ac,var(--primary)); border-radius:var(--radius) 0 0 var(--radius); }
+.dash-app-card__logo { font-size: 2rem; flex-shrink: 0; }
+.dash-app-card__body { flex: 1; min-width: 0; }
+.dash-app-card__name { font-weight: 700; font-size: .9rem; margin-bottom: .3rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dash-app-card__meta { display: flex; gap: .35rem; flex-wrap: wrap; margin-bottom: .3rem; }
+.tag { background: var(--surface2); border: 1px solid var(--border); border-radius: 99px; padding: .1rem .5rem; font-size: .7rem; color: var(--text-muted); }
+.dash-app-card__desc { font-size: .78rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ── Tool cards ───────────────────────────────────────────────── */
+.dash-tools-grid { display: flex; flex-direction: column; gap: .6rem; }
+.dash-tool-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: .75rem 1rem; display: flex; align-items: center; gap: .9rem; }
+.dash-tool-card__icon { font-size: 1.5rem; }
+.dash-tool-card__info { flex: 1; }
+.dash-tool-card__info strong { display: block; font-size: .875rem; }
+.dash-tool-card__info small { color: var(--text-muted); font-size: .75rem; }
+.dash-tool-card__power { display: flex; flex-direction: column; align-items: flex-end; gap: .2rem; min-width: 70px; }
+.power-mini { width: 60px; height: 5px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
+.power-mini__fill { height: 100%; background: linear-gradient(90deg,#ef4444,#a855f7); border-radius:99px; }
+
+/* ── Mission log ──────────────────────────────────────────────── */
+.missions-log-mini { display: flex; flex-direction: column; gap: .45rem; }
+.miss-row { display: flex; align-items: center; gap: .6rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: .5rem .85rem; font-size: .82rem; flex-wrap: wrap; }
+.miss-row__title { flex: 1; font-weight: 600; min-width: 120px; }
+.miss-row__when { color: var(--text-muted); font-size: .72rem; }
+
+/* ── XP (reuse from missions) ─────────────────────────────────── */
+.xp-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; }
+.xp-header { display: flex; justify-content: space-between; font-size: .85rem; margin-bottom: .6rem; }
+.xp-track { height: 10px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
+.xp-fill { height: 100%; background: linear-gradient(90deg,#a855f7,#7c3aed); border-radius: 99px; transition: width .8s ease; }

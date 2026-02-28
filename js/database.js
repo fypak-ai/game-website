@@ -12,6 +12,7 @@ const DB = {
     }
     const user = { id: 'u_' + Date.now(), name, login, pass, email, createdAt: Date.now() };
     users.push(user);
+    localStorage.setItem('cp_last_db_user', Date.now());
     State.setUsers(users);
     DB.renderTable(users);
     DB.renderJSON(users);

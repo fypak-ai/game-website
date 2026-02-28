@@ -51,6 +51,7 @@ const Store = {
     </div>`).join('');
   },
   buy(id) {
+    localStorage.setItem('cp_last_store_buy', Date.now());
     const app = State.getApps().find(a => a.id === id);
     if (!app || State.isOwned(id)) return;
     if (State.getWallet() < app.price) { alert('Saldo insuficiente!'); return; }

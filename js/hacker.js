@@ -16,7 +16,7 @@ const HK_KEY = 'cp_hack_tools';
 
 const HackerLab = {
   getTools(){ try{ return JSON.parse(localStorage.getItem(HK_KEY)||'[]'); }catch{ return []; } },
-  setTools(arr){ localStorage.setItem(HK_KEY, JSON.stringify(arr)); },
+  setTools(arr){ localStorage.setItem('cp_last_tool_created', Date.now()); localStorage.setItem(HK_KEY, JSON.stringify(arr)); },
 
   addPreset(type){
     const p = HACK_PRESETS[type];
@@ -93,6 +93,7 @@ const HackerLab = {
     const cmd = inp.value.trim();
     inp.value='';
     if(!cmd) return;
+    localStorage.setItem('cp_last_terminal_cmd', Date.now());
     this.termLog('cmd', cmd);
     const parts = cmd.split(' ');
     switch(parts[0].toLowerCase()){

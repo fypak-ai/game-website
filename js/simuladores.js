@@ -1,6 +1,6 @@
 // ── Simuladores (Mídia, IA, Cloud, Redes, Jogos) ────────────
 
-function out(id, text){ const el=document.getElementById(id); if(!el) return; el.textContent=text; el.classList.add('show'); }
+function out(id, text){ const el=document.getElementById(id); if(!el) return; el.textContent=text; el.classList.add('show'); localStorage.setItem('cp_last_sim_run', Date.now()); }
 function rnd(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
 function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 function ms(){ return (Math.random()*999+1).toFixed(0)+'ms'; }
