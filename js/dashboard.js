@@ -74,8 +74,8 @@ const Dashboard = {
     }
     if (empty) empty.classList.add('hidden');
     if (grid) grid.innerHTML = apps.map((a, i) => `
-      <div class="dash-app-card" style="--ac:${a.color || '#7c3aed'}">
-        <div class="dash-app-card__logo">${a.emoji || '✨'}</div>
+      <div class="dash-app-card" style="--ac:${(a.logo&&a.logo.color)||a.color||'#7c3aed'}">
+        <div class="dash-app-card__logo">${(a.logo&&a.logo.emoji)||a.emoji||'✨'}</div>
         <div class="dash-app-card__body">
           <div class="dash-app-card__name">${a.name}</div>
           <div class="dash-app-card__meta">
@@ -132,8 +132,8 @@ const Dashboard = {
     }
     if (empty) empty.classList.add('hidden');
     if (grid) grid.innerHTML = purchased.map(a => `
-      <div class="dash-app-card" style="--ac:${a.color || '#22c55e'}">
-        <div class="dash-app-card__logo">${a.emoji || '🛒'}</div>
+      <div class="dash-app-card" style="--ac:${(a.logo&&a.logo.color)||a.color||'#22c55e'}">
+        <div class="dash-app-card__logo">${(a.logo&&a.logo.emoji)||a.emoji||'🛒'}</div>
         <div class="dash-app-card__body">
           <div class="dash-app-card__name">${a.name}</div>
           <div class="dash-app-card__meta">

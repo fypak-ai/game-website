@@ -187,7 +187,7 @@ const Account = {
     if (empty) empty.classList.add('hidden');
     if (grid) grid.innerHTML = apps.map((a, i) => `
       <div class="app-card">
-        <div class="app-card__logo" style="background:${a.color || '#7c3aed'}20;border:1px solid ${a.color || '#7c3aed'}40">${a.emoji || '✨'}</div>
+        <div class="app-card__logo" style="background:${(a.logo&&a.logo.color)||a.color||'#7c3aed'}20;border:1px solid ${(a.logo&&a.logo.color)||a.color||'#7c3aed'}40">${(a.logo&&a.logo.emoji)||a.emoji||'✨'}</div>
         <div class="app-card__name">${a.name}</div>
         <div class="app-card__desc">${a.description || ''}</div>
         <div class="app-card__meta">
