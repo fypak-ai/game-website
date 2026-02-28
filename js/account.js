@@ -49,6 +49,16 @@ const Account = {
     // Get XP/wallet from any existing local session
     const ms = (() => { try { return JSON.parse(localStorage.getItem('cp_missions') || '{}'); } catch { return {}; } })();
 
+    // Generate deterministic fictional credentials for the game world
+    const _fakeHash = str => str.split('').reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,7);
+    const _fakeAdj  = ['dark','cyber','neon','ghost','toxic','void','phantom','rogue','shadow','steel','nova','hyper','ultra','mega','alpha','zero','ice','fire','pixel','data'];
+    const _fakeNoun = ['wolf','viper','hawk','cipher','ghost','blade','nexus','core','byte','unit','storm','pulse','node','forge','code','droid','bot','net','sys','hack'];
+    const _fakeWord = ['matrix','cobra','titan','storm','nexus','omega','viper','delta','sigma','alpha','blade','forge','cyber','ghost','pixel'];
+    const _fakeSym  = ['@','#','!','$'];
+    const _fn = _fakeHash(username);
+    const fakeUsername = `${_fakeAdj[_fn%_fakeAdj.length]}_${_fakeNoun[(_fn*7)%_fakeNoun.length]}_${(_fn*31+1337)%9000+1000}`;
+    const fakePassword = `${_fakeWord[(_fn*13)%_fakeWord.length]}${_fakeSym[(_fn*3)%_fakeSym.length]}${(_fn*17+42)%9000+1000}`;
+
     const user = {
       id: 'u_' + Date.now(),
       username, email,
@@ -57,6 +67,9 @@ const Account = {
       wallet: ms.wallet || 1000,
       xp: ms.xp || 0,
       level: ms.level || 1,
+      fakeUsername,
+      fakePassword,
+      missions_done: 0,
       created_at: new Date().toISOString()
     };
     users.push(user);

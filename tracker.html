@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>🔍 Rastreador de Credenciais — CodePlay</title>
+<link rel="stylesheet" href="styles/main.css"/>
+<link rel="stylesheet" href="styles/tracker.css"/>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="site-logo" href="index.html">⚡ CodePlay</a>
+    <nav class="site-nav">
+      <a href="index.html">Home</a>
+      <a href="playground.html">Playground</a>
+      <a href="store.html">Loja</a>
+      <a href="community.html">Comunidade</a>
+      <a href="database.html">Banco de Dados</a>
+      <a href="hacker.html">Hacker</a>
+      <a href="simuladores.html">Simuladores</a>
+      <a href="missions.html">Missões</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="tracker.html" class="active">🔍 Rastreador</a>
+      <a href="account.html">Conta</a>
+    </nav>
+    <div class="header-wallet">
+      <span class="wallet-icon">💰</span>
+      <span class="wallet-amount" id="walletDisplay">R$ 1.000,00</span>
+    </div>
+  </div>
+</header>
+
+<main class="tracker-main">
+
+  <!-- Hero -->
+  <section class="tracker-hero">
+    <div class="tracker-hero__badge">⚠️ SISTEMA RESTRITO — APENAS DEMONSTRAÇÃO FICTÍCIA</div>
+    <h1 class="tracker-hero__title">🔍 Rastreador de Credenciais</h1>
+    <p class="tracker-hero__sub">Insira um username para rastrear as credenciais fictícias do mundo CodePlay.</p>
+  </section>
+
+  <!-- Search -->
+  <section class="tracker-search-section">
+    <div class="tracker-search-box">
+      <div class="search-input-wrap">
+        <span class="search-icon">🔎</span>
+        <input type="text" id="searchInput" class="search-input" placeholder="Digite o username alvo..." autocomplete="off" />
+        <button class="btn btn--primary btn--lg" onclick="Tracker.search()">Rastrear</button>
+      </div>
+      <div class="search-hints">
+        <span class="hint-label">Exemplos:</span>
+        <button class="hint-btn" onclick="Tracker.quickSearch('ByteWolf_99')">ByteWolf_99</button>
+        <button class="hint-btn" onclick="Tracker.quickSearch('N3onViper')">N3onViper</button>
+        <button class="hint-btn" onclick="Tracker.quickSearch('GhostPixel')">GhostPixel</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Loading -->
+  <div id="trackerLoading" class="tracker-loading hidden">
+    <div class="scan-animation">
+      <div class="scan-ring"></div>
+      <div class="scan-ring scan-ring--2"></div>
+      <div class="scan-ring scan-ring--3"></div>
+      <span class="scan-icon">🔍</span>
+    </div>
+    <p class="scan-text" id="scanText">Iniciando varredura...</p>
+    <div class="scan-log" id="scanLog"></div>
+  </div>
+
+  <!-- Result -->
+  <div id="trackerResult" class="tracker-result hidden"></div>
+
+  <!-- Not found -->
+  <div id="trackerNotFound" class="tracker-notfound hidden">
+    <span class="notfound-icon">🚫</span>
+    <p>Usuário não encontrado no sistema.</p>
+  </div>
+
+</main>
+
+<script src="js/state.js"></script>
+<script src="js/tracker.js"></script>
+</body>
+</html>
