@@ -65,13 +65,111 @@ const DB = {
   },
   simulateLogin(e) {
     e.preventDefault();
-    const login = document.getElementById('simLogin').value.trim();
-    const pass = document.getElementById('simPass').value;
+    const query  = document.getElementById('simLogin').value.trim().toLowerCase();
+    const pass   = document.getElementById('simPass').value.trim();
     const result = document.getElementById('loginResult');
-    const user = State.getUsers().find(u => u.login === login);
-    if (!user) { result.textContent = '❌ Usuário "' + login + '" não encontrado.'; result.className = 'login-result error'; }
-    else if (user.pass !== pass) { result.textContent = '❌ Senha incorreta para "' + login + '".'; result.className = 'login-result error'; }
-    else { result.textContent = '✅ Login bem-sucedido! Bem-vindo, ' + user.name + '!'; result.className = 'login-result success'; }
+
+    // FakeGen — same deterministic algo as tracker.js
+    const _h = s => s.split('').reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,7);
+    const _adj  = ['dark','cyber','neon','ghost','toxic','void','phantom','rogue','shadow','steel','nova','hyper','ultra','mega','alpha','zero','ice','fire','pixel','data'];
+    const _noun = ['wolf','viper','hawk','cipher','ghost','blade','nexus','core','byte','unit','storm','pulse','node','forge','code','droid','bot','net','sys','hack'];
+    const _word = ['matrix','cobra','titan','storm','nexus','omega','viper','delta','sigma','alpha','blade','forge','cyber','ghost','pixel'];
+    const _sym  = ['@','#','!','$'];
+    const fakeUser = u => { const n=_h(u); return `${_adj[n%_adj.length]}_${_noun[(n*7)%_noun.length]}_${(n*31+1337)%9000+1000}`; };
+    const fakePass = u => { const n=_h(u); return `${_word[(n*13)%_word.length]}${_sym[(n*3)%_sym.length]}${(n*17+42)%9000+1000}`; };
+
+    // Get real users from cp_registered_users
+    let allUsers = [];
+    try { allUsers = JSON.parse(localStorage.getItem('cp_registered_users') || '[]'); } catch {}
+
+    // Find user: match by real username, fake username, or email
+    const user = allUsers.find(u =>
+      u.username.toLowerCase() === query ||
+      (u.fakeUsername || fakeUser(u.username)).toLowerCase() === query ||
+      (u.email || '').toLowerCase() === query
+    );
+
+    if (!user) {
+      result.innerHTML = `<div class="env-error">🚫 Usuário "<strong>${query}</strong>" não encontrado no sistema.</div>`;
+      result.className = 'login-result error';
+      result.classList.remove('hidden');
+      return;
+    }
+
+    // Validate fake password
+    const expectedFakePass = user.fakePassword || fakePass(user.username);
+    if (pass && pass !== expectedFakePass && pass !== '***' ) {
+      // Also allow entering the real username + fakePass
+      result.innerHTML = `<div class="env-error">🔑 Senha fictícia incorreta para <strong>${user.username}</strong>.<br><small>Use a senha gerada no Rastreador de Credenciais.</small></div>`;
+      result.className = 'login-result error';
+      result.classList.remove('hidden');
+      return;
+    }
+
+    // ── Build full environment panel ──────────────────────────
+    const fakeU    = user.fakeUsername || fakeUser(user.username);
+    const fakeP    = user.fakePassword || fakePass(user.username);
+    const level    = user.level || (1 + Math.floor((user.xp || 0) / 500));
+    const wallet   = (user.wallet || 1000).toFixed(2).replace('.', ',');
+    const xp       = user.xp || 0;
+    const since    = new Date(user.created_at || Date.now()).toLocaleDateString('pt-BR');
+
+    // User's apps (from their stored profile or current session if it's the same user)
+    let userApps = user.apps || [];
+    const currentUser = (() => { try { return JSON.parse(localStorage.getItem('cp_currentUser') || 'null'); } catch { return null; } })();
+    if (currentUser && currentUser.username.toLowerCase() === user.username.toLowerCase()) {
+      try {
+        const myApps  = JSON.parse(localStorage.getItem('cp_apps')  || '[]');
+        const ownedIds = JSON.parse(localStorage.getItem('cp_owned') || '[]');
+        const allApps  = JSON.parse(localStorage.getItem('cp_apps')  || '[]');
+        const ownedApps = allApps.filter(a => ownedIds.includes(a.id));
+        userApps = [...myApps, ...ownedApps].filter((a, i, arr) => arr.findIndex(b => b.name === a.name) === i);
+      } catch {}
+    }
+
+    const appsHTML = userApps.length
+      ? userApps.map(a => {
+          const emoji = (a.logo && a.logo.emoji) || a.emoji || '✨';
+          const color = (a.logo && a.logo.color) || a.color || '#7c3aed';
+          return `<div class="env-app" style="--ac:${color}">
+            <span class="env-app__icon">${emoji}</span>
+            <span class="env-app__name">${a.name}</span>
+            <span class="env-app__cat">${a.category || ''}</span>
+          </div>`;
+        }).join('')
+      : '<p class="env-empty">Nenhum app registrado.</p>';
+
+    result.className = 'login-result success';
+    result.innerHTML = `
+      <div class="env-panel">
+        <div class="env-header">
+          <span class="env-avatar">${user.avatar || '👤'}</span>
+          <div class="env-identity">
+            <strong class="env-username">${user.username}</strong>
+            <span class="env-level">Nível ${level}</span>
+            <span class="env-since">Desde ${since}</span>
+          </div>
+          <span class="env-badge">✅ ACESSO AUTORIZADO</span>
+        </div>
+
+        <div class="env-stats">
+          <div class="env-stat"><span class="env-stat__val">R$&nbsp;${wallet}</span><span class="env-stat__lbl">Carteira</span></div>
+          <div class="env-stat"><span class="env-stat__val">${xp} XP</span><span class="env-stat__lbl">Experiência</span></div>
+          <div class="env-stat"><span class="env-stat__val">${userApps.length}</span><span class="env-stat__lbl">Apps</span></div>
+          <div class="env-stat"><span class="env-stat__val">${user.missions_done || 0}</span><span class="env-stat__lbl">Missões</span></div>
+        </div>
+
+        <div class="env-creds">
+          <span class="env-creds__label">🔑 Credenciais fictícias:</span>
+          <code>${fakeU}</code> / <code>${fakeP}</code>
+        </div>
+
+        <div class="env-apps-section">
+          <h4>📱 Apps do usuário (${userApps.length})</h4>
+          <div class="env-apps-grid">${appsHTML}</div>
+        </div>
+      </div>
+    `;
     result.classList.remove('hidden');
   }
 };

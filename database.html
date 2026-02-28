@@ -42,7 +42,7 @@
     <!-- Tabs -->
     <div class="tabs">
       <button class="tab active" data-tab="tab-users" onclick="UI.showTab('tab-users')">👤 Usuários</button>
-      <button class="tab" data-tab="tab-login" onclick="UI.showTab('tab-login')">🔐 Simular Login</button>
+      <button class="tab" data-tab="tab-login" onclick="UI.showTab('tab-login')">🔐 Login</button>
       <button class="tab" data-tab="tab-json" onclick="UI.showTab('tab-json')">{ } JSON</button>
     </div>
 
@@ -93,8 +93,8 @@
     <!-- Tab: Login -->
     <div class="tab-content" id="tab-login">
       <div class="login-sim">
-        <h3>🔐 Simulador de Login</h3>
-        <p>Teste as credenciais dos usuários cadastrados.</p>
+        <h3>🔐 Acesso ao Ambiente do Usuário</h3>
+        <p>Digite o username real ou fictício + senha fictícia para acessar o ambiente completo do usuário.</p>
         <form onsubmit="DB.simulateLogin(event)" class="login-form">
           <div class="form-group">
             <label>Login</label>
@@ -104,7 +104,7 @@
             <label>Senha</label>
             <input type="password" id="simPass" placeholder="Digite a senha" required />
           </div>
-          <button type="submit" class="btn btn--primary">🚀 Simular Login</button>
+          <button type="submit" class="btn btn--primary">🔓 Acessar Ambiente</button>
         </form>
         <div id="loginResult" class="login-result hidden"></div>
       </div>

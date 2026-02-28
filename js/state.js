@@ -31,11 +31,11 @@ const State = {
   },
 
   seedApps() {
-    if (localStorage.getItem(this.SEEDED_KEY) === '2') return; // re-seed if v1 to add tracker
+    if (localStorage.getItem(this.SEEDED_KEY) === '3') return; // re-seed if v1/v2
     const seed = [
       { id: 'seed_tracker', name: 'Rastreador de Credenciais', 
         desc: 'App hacker fictício — rastreie logins e senhas fictícias de qualquer usuário do CodePlay.',
-        price: 0, category: 'Segurança',
+        price: 520, category: 'Segurança',
         code: '// App especial — abre o Rastreador de Credenciais',
         logo: { emoji: '🔍', color: '#7c3aed' },
         launchUrl: 'tracker.html',
@@ -50,7 +50,7 @@ const State = {
       { id: 'seed_8', name: 'ChatBot AI', desc: 'IA conversacional fictícia que responde perguntas sobre o universo imaginário do CodePlay.', price: 49.90, category: 'Utilitário', code: 'function main() {\n  const respostas = ["Olá! Sou uma IA fictícia.", "Posso ajudar com tudo que não existe!", "Meu conhecimento vai até 2099."];\n  return respostas[Math.floor(Math.random()*respostas.length)];\n}', logo: { emoji: "🤖", color: "#7c3aed" }, createdAt: Date.now() - 10800000 },
     ];
     State.setApps(seed);
-    localStorage.setItem(this.SEEDED_KEY, '2'); // v2: includes tracker app
+    localStorage.setItem(this.SEEDED_KEY, '3'); // v3: tracker price 520
   }
 };
 
