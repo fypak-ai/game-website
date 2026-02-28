@@ -219,7 +219,7 @@ function generateChatMissions() {
     ...m,
     instanceId: m.id + '_' + Date.now(),
     startedAt: Date.now(),
-    deadline: Date.now() + m.time * 1000,
+    deadline: Date.now() + 60 * 1000, // 1 minuto fixo
     status: 'available',
   }));
   s.accepted = s.accepted || [];
@@ -245,7 +245,7 @@ function renderSidebar() {
 
 function renderSidebarMissions() {
   const s = CS.s;
-  const missions = (s.currentMissions || []).filter(m => m.status === 'available');
+  const missions = (s.currentMissions || []).filter(m => m.status === 'available' && Date.now() < m.deadline);
   const el = document.getElementById('sidebarMissions');
   if (!el) return;
   if (!missions.length) {
@@ -455,6 +455,15 @@ function missionCycleTick() {
   if (!s.nextMission || Date.now() >= s.nextMission) {
     generateChatMissions();
   }
+  // Auto-expire available missions past deadline
+  let changed = false;
+  (s.currentMissions || []).forEach(m => {
+    if (m.status === 'available' && Date.now() > m.deadline) {
+      m.status = 'expired';
+      changed = true;
+    }
+  });
+  if (changed) CS.save(s);
   renderSidebarMissions();
   renderAccepted();
 }
