@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Simuladores – CodePlay</title>
+<link rel="stylesheet" href="styles/main.css"/>
+<link rel="stylesheet" href="styles/components.css"/>
+<link rel="stylesheet" href="styles/simuladores.css"/>
+</head>
+<body>
+<header class="header" id="header">
+  <div class="container header__inner">
+    <a href="index.html" class="logo"><span class="logo__icon">⚡</span><span class="logo__text">CodePlay</span></a>
+    <nav class="nav" id="nav">
+      <a href="index.html" class="nav__link">Home</a>
+      <a href="playground.html" class="nav__link">Playground</a>
+      <a href="store.html" class="nav__link">Loja</a>
+      <a href="community.html" class="nav__link">Comunidade</a>
+      <a href="database.html" class="nav__link">Banco de Dados</a>
+      <a href="hacker.html" class="nav__link">Hacker</a>
+      <a href="simuladores.html" class="nav__link active">Simuladores</a>
+    </nav>
+    <a href="playground.html" class="btn btn--primary">Start Creating Now</a>
+    <button class="hamburger" id="hamburger">☰</button>
+  </div>
+</header>
+
+<main class="page-main container">
+  <h1 class="page-title">🎛️ Simuladores</h1>
+  <p class="page-subtitle">Laboratórios fictícios de Mídia, IA, Cloud, Redes e Jogos. Tudo 100% simulado para entretenimento.</p>
+
+  <!-- Tab bar -->
+  <div class="sim-tabs">
+    <button class="sim-tab active" data-tab="media" onclick="Sim.switchTab('media',this)">📺 Mídia</button>
+    <button class="sim-tab" data-tab="ia" onclick="Sim.switchTab('ia',this)">🤖 IA</button>
+    <button class="sim-tab" data-tab="cloud" onclick="Sim.switchTab('cloud',this)">☁️ Cloud</button>
+    <button class="sim-tab" data-tab="redes" onclick="Sim.switchTab('redes',this)">🌐 Redes</button>
+    <button class="sim-tab" data-tab="jogos" onclick="Sim.switchTab('jogos',this)">🎮 Jogos</button>
+  </div>
+
+  <!-- ── MÍDIA ──────────────────────────────────── -->
+  <div class="sim-panel active" id="tab-media">
+    <h2 class="sim-heading">📺 Estúdio de Mídia Fictício</h2>
+    <div class="sim-grid">
+
+      <div class="sim-card">
+        <div class="sim-card__icon">🎬</div>
+        <h4>Editor de Vídeo</h4>
+        <p>Monte sequências fictícias, aplique filtros e exporte em "8K Ultra" imaginário.</p>
+        <div class="sim-controls">
+          <select id="videoEffect"><option>Filtro Cinematográfico</option><option>Slow-Motion ×0.1</option><option>Hyperlapse ×100</option><option>Efeito Matrix</option><option>Vintage 8mm</option></select>
+          <input type="text" id="videoTitle" placeholder="Nome do vídeo"/>
+          <button class="btn btn--purple btn--sm" onclick="Sim.media.editVideo()">▶ Editar</button>
+        </div>
+        <div class="sim-output" id="out-video"></div>
+      </div>
+
+      <div class="sim-card">
+        <div class="sim-card__icon">🎵</div>
+        <h4>Produção Musical</h4>
+        <p>Compose trilhas fictícias com BPM, instrumentos e mixagem virtual.</p>
+        <div class="sim-controls">
+          <select id="musicGenre"><option>Lo-Fi Hip Hop</option><option>Synthwave</option><option>Death Metal IA</option><option>Bossa Nova Quântica</option><option>Drum & Bass Espacial</option></select>
+          <input type="number" id="musicBpm" placeholder="BPM (ex: 128)" min="60" max="200" value="128"/>
+          <button class="btn btn--purple btn--sm" onclick="Sim.media.produceMusic()">🎵 Produzir</button>
+        </div>
+        <div class="sim-output" id="out-music"></div>
+      </div>
+
+      <div class="sim-card">
+        <div class="sim-card__icon">🖼️</div>
+        <h4>Gerador de Imagens</h4>
+        <p>Descreva qualquer cena e receba um "render fictício" instantâneo.</p>
+        <div class="sim-controls">
+          <input type="text" id="imgPrompt" placeholder="Ex: dragão cyberpunk na lua"/>
+          <select id="imgStyle"><option>Realista</option><option>Anime</option><option>Oil Painting</option><option>Pixel Art</option><option>Fotografia de Drone</option></select>
+          <button class="btn btn--purple btn--sm" onclick="Sim.media.genImage()">🎨 Gerar</button>
+        </div>
+        <div class="sim-output" id="out-img"></div>
+      </div>
+
+      <div class="sim-card">
+        <div class="sim-card__icon">🎙️</div>
+        <h4>Estúdio de Podcast</h4>
+        <p>Grave episódios fictícios, adicione trilha e distribua em plataformas imaginárias.</p>
+        <div class="sim-controls">
+          <input type="text" id="podcastTitle" placeholder="Título do episódio"/>
+          <select id="podcastCat"><option>Tecnologia</option><option>Terror</option><option>Comédia</option><option>Ciência Fictícia</option><option>Conspirações</option></select>
+          <button class="btn btn--purple btn--sm" onclick="Sim.media.recordPodcast()">🎙️ Gravar</button>
+        </div>
+        <div class="sim-output" id="out-podcast"></div>
+      </div>
+
+      <div class="sim-card">
+        <div class="sim-card__icon">✨</div>
+        <h4>Efeitos Visuais (VFX)</h4>
+        <p>Simule explosões, portais e hologramas para seu filme fictício.</p>
+        <div class="sim-controls">
+          <select id="vfxType"><option>Explosão Nuclear</option><option>Portal Dimensional</option><option>Chuva de Meteoros</option><option>Holograma 3D</option><option>Tempestade de Raios</option></select>
+          <input type="number" id="vfxFrames" placeholder="Frames (ex: 240)" value="240"/>
+          <button class="btn btn--purple btn--sm" onclick="Sim.media.renderVfx()">✨ Renderizar</button>
+        </div>
+        <div class="sim-output" id="out-vfx"></div>
+      </div>
+
+      <div class="sim-card">
+        <div class="sim-card__icon">📺</div>
+        <h4>Streamer Virtual</h4>
+        <p>Inicie uma live fictícia, monitore espectadores e receba doações imaginárias.</p>
+        <div class="sim-controls">
+          <input type="text" id="streamTitle" placeholder="Título da live"/>
+          <select id="streamPlatform"><option>TwitchFake</option><option>YoutubeFake</option><option>TikTokFake</option><option>KickFake</option></select>
+          <button class="btn btn--purple btn--sm" onclick="Sim.media.goLive()">🔴 Ir ao Vivo</button>
+        </div>
+        <div class="sim-output" id="out-stream"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── IA ──────────────────────────────────────── -->
+  <div class="sim-panel" id="tab-ia">
+    <h2 class="sim-heading">🤖 Laboratório de IA Fictícia</h2>
+    <div class="sim-grid">
+
+      <div class="sim-card">
+        <div class="sim-card__icon">💬</div>
+        <h4>Chatbot Avançado</h4>
+        <p>Converse com uma IA fictícia de "10 trilhões de parâmetros".</p>
+        <div class="sim-controls">
+          <input type="text" id="chatMsg" placeholder="Pergunte qualquer coisa..."/>
+          <select id="chatModel"><option>GPT-Fake-∞</option><option>Claude-Imaginary-4</option><option>Gemini-Fictional</option><option>LLaMA-Fantasy-70B</option></select>
+          <button class="btn btn--blue btn--sm" onclick="Sim.ia.chat()">💬 Enviar</button>
+        </div>
+        <div class="sim-output" id="out-chat"></div>
+      </div>
+
+      <div class="sim-card">
+        <div class="sim-card__icon">🎨</div>
+        <h4>IA Geradora de Imagens</h4>
+        <p>Texto → imagem em "0.001ms" com o modelo Stable-Fake-XL.</p>
+        <div class="sim-controls">
+          <input type="text" id="aiImgPrompt" placeholder="Descreva a imagem..."/>
+          <select id="aiImgModel"><option>Stable-Fake-XL</option><option>DALL-E-Imaginário</option><option>Midjourney-Fake</option><option>Firefly-Fiction</option></select>
+          <button class="btn btn--blue btn--sm" onclick="Sim.ia.genImg()">🎨 Gerar</button>
+        </div>
+        <div class="sim-output" id="out-aiimg"></div>
+      </div>
+
+      <div class="sim-card">
+        <div class="sim-card__icon">👨‍💻</div>
+        <h4>Assistente de Código</h4>
+        <p>Descreva o que precisa e receba código fictício gerado em 5 linguagens.</p>
+        <div class="sim-controls">
+          <input type="text" id="codeRequest" placeholder="Ex: crie um servidor web em 3 linhas"/>
+          <select id="codeLang"><option>JavaScript</option><option>Python</option><option>Rust</option><option>COBOL Quântico</option><option>BrainFuck++</option></select>
+          <button class="btn btn--blue btn--sm" onclick="Sim.ia.genCode()">👨‍💻 Gerar Código</button>
+        </div>
+        <div class="sim-output" id="out-code"></div>
+      </div>
+
+      <div class="sim-card">
+        <div class="sim-card__icon">🔊</div>
+        <h4>IA de Voz (TTS)</h4>
+        <p>Converta texto em "fala sintética fictícia" com 50 vozes imaginárias.</p>
+        <div class="sim-controls">
+          <textarea id="ttsText" rows="3" placeholder="Digite o texto para converter..."></textarea>
+          <select id="ttsVoice"><option>Robô Brasileiro</option><option>Apresentador de TV</option><option>Villão de Filme</option><option>Assistente Espacial</option></select>
+          <button class="btn btn--blue btn--sm" onclick="Sim.ia.tts()">🔊 Sintetizar</button>
+        </div>
+        <div class="sim-output" id="out-tts"></div>
+      </div>
+
+      <div class="sim-card">
+        <div class="sim-card__icon">🌍</div>
+        <h4>Tradutor IA</h4>
+        <p>Traduza para 200+ idiomas fictícios incluindo Klingon e Élfico.</p>
+        <div class="sim-controls">
+          <textarea id="translateText" rows="3" placeholder="Texto para traduzir..."></textarea>
+          <select id="translateLang"><option>Português → Inglês</option><option>Português → Japonês</option><option>Português → Klingon</option><option>Português → Élfico</option><option>Português → Emoji</option><option>Português → Bináro</option></select>
+          <button class="btn btn--blue btn--sm" onclick="Sim.ia.translate()">🌍 Traduzir</button>
+        </div>
+        <div class="sim-output" id="out-translate"></div>
+      </div>
+
+      <div class="sim-card">
+        <div class="sim-card__icon">✍️</div>
+        <h4>Escritor IA</h4>
+        <p>Gere histórias, artigos e roteiros fictícios automaticamente.</p>
+        <div class="sim-controls">
+          <input type="text" id="writePrompt" placeholder="Ex: conto de terror espacial"/>
+          <select id="writeStyle"><option>Conto</option><option>Artigo Científico</option><option>Roteiro de Filme</option><option>Poesia</option><option>Manifesto Fictício</option></select>
+          <button class="btn btn--blue btn--sm" onclick="Sim.ia.write()">✍️ Escrever</button>
+        </div>
+        <div class="sim-output" id="out-write"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── CLOUD ───────────────────────────────────── -->
+  <div class="sim-panel" id="tab-cloud">
+    <h2 class="sim-heading">☁️ Infraestrutura Cloud Fictícia</h2>
+    <div class="sim-grid">
+
+      <div class="sim-card">
+        <div class="sim-card__icon">🖥️</div>
+        <h4>Servidor Virtual (VM)</h4>
+        <p>Provisione instâncias fictícias de até 512 vCPUs e 4TB de RAM.</p>
+        <div class="sim-controls">
+          <select id="vmType"><option>t999.nano (512 vCPU)</option><option>r1.mega (4TB RAM)</option><option>g5.quantum (GPU Quântica)</option><option>c3.photon (Fibra Óptica)</option></select>
+          <input type="text" id="vmName" placeholder="Nome da instância"/>
+          <button class="btn btn--cyan btn--sm" onclick="Sim.cloud.launchVM()">🖥️ Provisionar</button>
+        </div>
+        <div class="sim-output" id="out-vm"></div>
+      </div>
+
+      <div class="sim-card">
+        <div class="sim-card__icon">💾</div>
+        <h4>Armazenamento Cloud</h4>
+        <p>Gerencie buckets fictícios com capacidade de "∞ Exabytes".</p>
+        <div class="sim-controls">
+          <input type="text" id="bucketName" placeholder="Nome do bucket"/>
+          <select id="bucketRegion"><option>sa-east-1 (São Paulo)</option><option>moon-1 (Lua)</option><option>mars-2 (Marte)</option><option>quantum-0 (Dimensão X)</option></select>
+          <button class="btn btn--cyan btn--sm" onclick="Sim.cloud.createBucket()">💾 Criar Bucket</button>
+        </div>
+        <div class="sim-output" id="out-bucket"></div>
+      </div>
+
+      <div class="sim-card">
+        <div class="sim-card__icon">🗄️</div>
+        <h4>Banco de Dados Cloud</h4>
+        <p>Instâncias de PostgreSQL, MongoDB e NoSQL Quântico fictícios.</p>
+        <div class="sim-controls">
+          <select id="dbEngine"><option>PostgreSQL-Fake 15</option><option>MongoDB-Fiction 7</option><option>Redis-Imaginário</option><option>QuantumDB Alpha</option></select>
+          <input type="text" id="dbName" placeholder="Nome do banco"/>
+          <button class="btn btn--cyan btn--sm" onclick="Sim.cloud.createDB()">🗄️ Criar DB</button>
+        </div>
+        <div class="sim-output" id="out-db"></div>
+      </div>
+
+      <div class="sim-card">
+        <div class="sim-card__icon">🌐</div>
+        <h4>CDN Global</h4>
+        <p>Distribua conteúdo fictício por 500 PoPs em todos os planetas.</p>
+        <div class="sim-controls">
+          <input type="text" id="cdnDomain" placeholder="dominio.ficticio.io"/>
+          <select id="cdnEdge"><option>500 PoPs Globais</option><option>PoP Lunar</option><option>Edge Quântico</option></select>
+          <button class="btn btn--cyan btn--sm" onclick="Sim.cloud.deployCDN()">🌐 Ativar CDN</button>
+        </div>
+        <div class="sim-output" id="out-cdn"></div>
+      </div>
+
+      <div class="sim-card">
+        <div class="sim-card__icon">🔒</div>
+        <h4>Backup Automático</h4>
+        <p>Backups fictícios criptografados com AES-99999 em bunkers submarinos.</p>
+        <div class="sim-controls">
+          <input type="text" id="backupSource" placeholder="Fonte (ex: /dados/producao)"/>
+          <select id="backupFreq"><option>A cada 1 segundo</option><option>Contínuo</option><option>A cada 30 anos</option></select>
+          <button class="btn btn--cyan btn--sm" onclick="Sim.cloud.scheduleBackup()">🔒 Agendar Backup</button>
+        </div>
+        <div class="sim-output" id="out-backup"></div>
+      </div>
+
+      <div class="sim-card">
+        <div class="sim-card__icon">⚡</div>
+        <h4>Função Serverless</h4>
+        <p>Deploy de lambdas fictícias que executam em "picossegundos".</p>
+        <div class="sim-controls">
+          <input type="text" id="fnName" placeholder="Nome da função"/>
+          <textarea id="fnCode" rows="3" placeholder="exports.handler = async () => 'ok';"></textarea>
+          <button class="btn btn--cyan btn--sm" onclick="Sim.cloud.deployFn()">⚡ Deploy</button>
+        </div>
+        <div class="sim-output" id="out-fn"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── REDES ──────────────────────────────────── -->
+  <div class="sim-panel" id="tab-redes">
+    <h2 class="sim-heading">🌐 Laboratório de Redes Fictício</h2>
+    <div class="sim-grid">
+
+      <div class="sim-card">
+        <div class="sim-card__icon">📡</div>
+        <h4>Configurador de Roteador</h4>
+        <p>Configure roteadores fictícios com Wi-Fi 9 e alcance de 10km.</p>
+        <div class="sim-controls">
+          <input type="text" id="routerSSID" placeholder="Nome da rede (SSID)"/>
+          <select id="routerStd"><option>Wi-Fi 9 (100 Gbps)</option><option>Wi-Fi Quântico</option><option>5G+++ Fictional</option></select>
+          <button class="btn btn--green btn--sm" onclick="Sim.redes.configRouter()">📡 Configurar</button>
+        </div>
+        <div class="sim-output" id="out-router"></div>
+      </div>
+
+      <div class="sim-card">
+        <div class="sim-card__icon">🛡️</div>
+        <h4>Firewall Fictício</h4>
+        <p>Bloqueie IPs e protocolos imaginários com regras de alta precisão.</p>
+        <div class="sim-controls">
+          <input type="text" id="fwIp" placeholder="IP a bloquear (ex: 192.168.1.1)"/>
+          <select id="fwAction"><option>Bloquear</option><option>Permitir</option><option>Redirecionar para /dev/null</option></select>
+          <button class="btn btn--green btn--sm" onclick="Sim.redes.addFwRule()">🛡️ Adicionar Regra</button>
+        </div>
+        <div class="sim-output" id="out-fw"></div>
+      </div>
+
+      <div class="sim-card">
+        <div class="sim-card__icon">🔐</div>
+        <h4>VPN Secure</h4>
+        <p>Conecte-se a servidores fictícios em 195 países com criptografia quântica.</p>
+        <div class="sim-controls">
+          <select id="vpnServer"><option>🇧🇷 Brasil – São Paulo</option><option>🌙 Lua – Crater City</option><option>🚀 Marte – Elon Base</option><option>🌀 Dimensão X</option></select>
+          <button class="btn btn--green btn--sm" onclick="Sim.redes.connectVPN()">🔐 Conectar VPN</button>
+        </div>
+        <div class="sim-output" id="out-vpn"></div>
+      </div>
+
+      <div class="sim-card">
+        <div class="sim-card__icon">🌍</div>
+        <h4>Gerenciador DNS</h4>
+        <p>Gerencie zonas DNS fictícias com TTL de 0 segundos.</p>
+        <div class="sim-controls">
+          <input type="text" id="dnsZone" placeholder="zona.ficticia.io"/>
+          <select id="dnsType"><option>A</option><option>AAAA</option><option>CNAME</option><option>QUANTUM</option><option>TEMPORAL</option></select>
+          <button class="btn btn--green btn--sm" onclick="Sim.redes.manageDNS()">🌍 Gerenciar</button>
+        </div>
+        <div class="sim-output" id="out-dns"></div>
+      </div>
+
+      <div class="sim-card">
+        <div class="sim-card__icon">📊</div>
+        <h4>Monitor de Rede</h4>
+        <p>Visualize tráfego fictício em tempo real com gráficos animados.</p>
+        <div class="sim-controls">
+          <input type="text" id="monitorIface" placeholder="Interface (ex: eth0)"/>
+          <button class="btn btn--green btn--sm" onclick="Sim.redes.startMonitor()">📊 Monitorar</button>
+          <button class="btn btn--sm" onclick="Sim.redes.stopMonitor()">⏹ Parar</button>
+        </div>
+        <div class="sim-output" id="out-monitor"></div>
+      </div>
+
+      <div class="sim-card">
+        <div class="sim-card__icon">🔍</div>
+        <h4>Scanner de Segurança</h4>
+        <p>Varra redes fictícias em busca de vulnerabilidades imaginárias.</p>
+        <div class="sim-controls">
+          <input type="text" id="scanTarget" placeholder="Alvo (ex: 10.0.0.0/24)"/>
+          <select id="scanType"><option>Básico</option><option>Agressivo</option><option>Stealth</option><option>Quântico</option></select>
+          <button class="btn btn--green btn--sm" onclick="Sim.redes.scan()">🔍 Escanear</button>
+        </div>
+        <div class="sim-output" id="out-scan"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── JOGOS ──────────────────────────────────── -->
+  <div class="sim-panel" id="tab-jogos">
+    <h2 class="sim-heading">🎮 Arcade de Jogos Fictícios</h2>
+    <div class="sim-grid">
+
+      <div class="sim-card">
+        <div class="sim-card__icon">⚔️</div>
+        <h4>Criador de RPG</h4>
+        <p>Crie personagens fictícios com atributos, classes e habilidades únicas.</p>
+        <div class="sim-controls">
+          <input type="text" id="rpgName" placeholder="Nome do personagem"/>
+          <select id="rpgClass"><option>Guerreiro Quântico</option><option>Mago de Dados</option><option>Ladrão de Pixels</option><option>Paladino do Código</option><option>Necromancer JS</option></select>
+          <button class="btn btn--orange btn--sm" onclick="Sim.jogos.createRPG()">⚔️ Criar Personagem</button>
+        </div>
+        <div class="sim-output" id="out-rpg"></div>
+      </div>
+
+      <div class="sim-card">
+        <div class="sim-card__icon">🔫</div>
+        <h4>Simulador FPS</h4>
+        <p>Entre no campo de batalha fictício com armas imaginárias e física impossível.</p>
+        <div class="sim-controls">
+          <input type="text" id="fpsNick" placeholder="Seu nickname"/>
+          <select id="fpsWeapon"><option>Railgun Quântica</option><option>Sniper Temporal</option><option>Pistola de Pixels</option><option>Lança-Bytes</option></select>
+          <button class="btn btn--orange btn--sm" onclick="Sim.jogos.playFPS()">🔫 Jogar Partida</button>
+        </div>
+        <div class="sim-output" id="out-fps"></div>
+      </div>
+
+      <div class="sim-card">
+        <div class="sim-card__icon">🏎️</div>
+        <h4>Corridas Fictícias</h4>
+        <p>Pilote carros imaginários a velocidades impossíveis em pistas virtuais.</p>
+        <div class="sim-controls">
+          <input type="text" id="racerName" placeholder="Nome do piloto"/>
+          <select id="raceCar"><option>Bugatti Quantum X</option><option>Tesla Time-Machine</option><option>F1 Hyperspace</option><option>Kart Dimensional</option></select>
+          <button class="btn btn--orange btn--sm" onclick="Sim.jogos.race()">🏎️ Correr</button>
+        </div>
+        <div class="sim-output" id="out-race"></div>
+      </div>
+
+      <div class="sim-card">
+        <div class="sim-card__icon">♟️</div>
+        <h4>Estratégia em Tempo Real</h4>
+        <p>Comande exércitos de código contra invasores fictícios da dimensão Z.</p>
+        <div class="sim-controls">
+          <input type="text" id="stratBase" placeholder="Nome da base"/>
+          <select id="stratFaction"><option>Aliança do Código</option><option>Império dos Bugs</option><option>Federação de Pixels</option><option>Ordem dos Commits</option></select>
+          <button class="btn btn--orange btn--sm" onclick="Sim.jogos.rts()">♟️ Batalhar</button>
+        </div>
+        <div class="sim-output" id="out-rts"></div>
+      </div>
+
+      <div class="sim-card">
+        <div class="sim-card__icon">🏰</div>
+        <h4>MOBA Arena</h4>
+        <p>Escolha um herói fictício e destrua o nexus do inimigo em partidas de 0.1s.</p>
+        <div class="sim-controls">
+          <input type="text" id="mobaPlayer" placeholder="Seu nickname"/>
+          <select id="mobaHero"><option>CodeMaster (Mago)</option><option>BugSlayer (Assassino)</option><option>CacheBuster (Tank)</option><option>MergeConflict (Suporte)</option></select>
+          <button class="btn btn--orange btn--sm" onclick="Sim.jogos.moba()">🏰 Jogar MOBA</button>
+        </div>
+        <div class="sim-output" id="out-moba"></div>
+      </div>
+
+      <div class="sim-card">
+        <div class="sim-card__icon">🎲</div>
+        <h4>Sandbox Infinito</h4>
+        <p>Crie mundos fictícios, construa estruturas impossíveis e defy gravity.</p>
+        <div class="sim-controls">
+          <input type="text" id="sandboxSeed" placeholder="Semente do mundo (ex: 42)"/>
+          <select id="sandboxMode"><option>Criativo Infinito</option><option>Sobrevivência Quântica</option><option>Hardcore Fictício</option></select>
+          <button class="btn btn--orange btn--sm" onclick="Sim.jogos.sandbox()">🎲 Criar Mundo</button>
+        </div>
+        <div class="sim-output" id="out-sandbox"></div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<footer class="footer"><div class="footer__bottom"><p>© 2026 CodePlay. 100% Fictício.</p></div></footer>
+<script src="js/state.js"></script>
+<script src="js/simuladores.js"></script>
+<script src="js/main.js"></script>
+</body></html>

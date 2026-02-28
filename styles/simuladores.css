@@ -1,0 +1,38 @@
+
+.sim-tabs { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.sim-tab { padding: .55rem 1.2rem; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text-muted); cursor: pointer; font-size: .9rem; font-weight: 600; transition: var(--transition); }
+.sim-tab:hover { border-color: var(--primary); color: var(--text); }
+.sim-tab.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+.sim-panel { display: none; }
+.sim-panel.active { display: block; }
+.sim-heading { margin-bottom: 1.25rem; font-size: 1.3rem; }
+
+.sim-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px,1fr)); gap: 1.25rem; }
+.sim-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; }
+.sim-card__icon { font-size: 2rem; margin-bottom: .5rem; }
+.sim-card h4 { margin-bottom: .4rem; font-size: 1rem; }
+.sim-card p { font-size: .82rem; color: var(--text-muted); margin-bottom: .85rem; }
+
+.sim-controls { display: flex; flex-direction: column; gap: .5rem; margin-bottom: .75rem; }
+.sim-controls input, .sim-controls select, .sim-controls textarea { width: 100%; padding: .45rem .7rem; border: 1px solid var(--border); border-radius: 6px; background: var(--surface2); color: var(--text); font-size: .85rem; outline: none; }
+.sim-controls input:focus, .sim-controls select:focus, .sim-controls textarea:focus { border-color: var(--primary); }
+
+.sim-output { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: .65rem .85rem; font-size: .82rem; color: var(--text); white-space: pre-wrap; min-height: 40px; font-family: 'Courier New', monospace; display: none; }
+.sim-output.show { display: block; animation: fadeIn .3s ease; }
+@keyframes fadeIn { from { opacity:0; transform: translateY(-5px) } to { opacity:1; transform: none } }
+
+/* Colored buttons per tab */
+.btn--purple { background: #7c3aed; color: #fff; border: none; }
+.btn--purple:hover { background: #6d28d9; }
+.btn--blue { background: #2563eb; color: #fff; border: none; }
+.btn--blue:hover { background: #1d4ed8; }
+.btn--cyan { background: #0891b2; color: #fff; border: none; }
+.btn--cyan:hover { background: #0e7490; }
+.btn--green { background: #059669; color: #fff; border: none; }
+.btn--green:hover { background: #047857; }
+.btn--orange { background: #ea580c; color: #fff; border: none; }
+.btn--orange:hover { background: #c2410c; }
+.btn--sm { padding: .35rem .8rem; font-size: .82rem; border-radius: 6px; cursor: pointer; font-weight: 600; }
+
+@media (max-width: 700px) { .sim-grid { grid-template-columns: 1fr; } }

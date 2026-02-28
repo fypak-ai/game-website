@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Hacker – CodePlay</title>
+<link rel="stylesheet" href="styles/main.css"/>
+<link rel="stylesheet" href="styles/components.css"/>
+<link rel="stylesheet" href="styles/hacker.css"/>
+</head>
+<body>
+<header class="header" id="header">
+  <div class="container header__inner">
+    <a href="index.html" class="logo"><span class="logo__icon">⚡</span><span class="logo__text">CodePlay</span></a>
+    <nav class="nav" id="nav">
+      <a href="index.html" class="nav__link">Home</a>
+      <a href="playground.html" class="nav__link">Playground</a>
+      <a href="store.html" class="nav__link">Loja</a>
+      <a href="community.html" class="nav__link">Comunidade</a>
+      <a href="database.html" class="nav__link">Banco de Dados</a>
+      <a href="hacker.html" class="nav__link active">Hacker</a>
+      <a href="simuladores.html" class="nav__link">Simuladores</a>
+    </nav>
+    <a href="playground.html" class="btn btn--primary">Start Creating Now</a>
+    <button class="hamburger" id="hamburger">☰</button>
+  </div>
+</header>
+
+<main class="page-main container">
+  <div class="hack-warning">
+    ⚠️ <strong>AVISO DE SIMULAÇÃO</strong> — Todas as ferramentas são 100% fictícias e criadas apenas para fins educacionais e de entretenimento. Nenhuma ação real é executada.
+  </div>
+
+  <h1 class="page-title hack-title">☠️ Hacker Lab</h1>
+  <p class="page-subtitle">Crie ferramentas fictícias, execute simulações no terminal e explore o lado sombrio do CodePlay. <strong>100% inofensivo.</strong></p>
+
+  <div class="hack-layout">
+    <!-- Left: Creator + Presets -->
+    <div class="hack-left">
+      <div class="hack-panel">
+        <h3>🛠️ Criar Ferramenta Hacker</h3>
+        <form id="hackForm">
+          <div class="form-group">
+            <label>Nome da Ferramenta</label>
+            <input type="text" id="hackName" placeholder="Ex: UltraBreaker 3000" required maxlength="40"/>
+          </div>
+          <div class="form-group">
+            <label>Tipo</label>
+            <select id="hackType">
+              <option value="password">🔓 Quebrador de Senhas</option>
+              <option value="scanner">📡 Scanner de Rede</option>
+              <option value="grabber">🎯 Grabber de IP</option>
+              <option value="ddos">⚔️ Ferramenta DDoS</option>
+              <option value="phishing">🎣 Simulador de Phishing</option>
+              <option value="keylogger">⌨️ Keylogger Fictício</option>
+              <option value="ransomware">💀 Ransomware Simulado</option>
+              <option value="backdoor">🚪 Backdoor Trainer</option>
+              <option value="sniffer">👃 Packet Sniffer</option>
+              <option value="exploit">💣 Exploit Generator</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Poder: <span id="powerVal">50</span>/100</label>
+            <input type="range" id="hackPower" min="1" max="100" value="50" oninput="document.getElementById('powerVal').textContent=this.value"/>
+          </div>
+          <div class="form-group">
+            <label>Código Personalizado (opcional)</label>
+            <textarea id="hackCode" rows="5" placeholder="// Código fictício da sua ferramenta
+function attack() {
+  return 'Simulando...';
+}"></textarea>
+          </div>
+          <button type="submit" class="btn btn--danger btn--full">☠️ Forjar Ferramenta</button>
+        </form>
+      </div>
+
+      <div class="hack-panel">
+        <h3>⚡ Ferramentas Pré-definidas</h3>
+        <div class="preset-grid">
+          <button class="preset-btn" onclick="HackerLab.addPreset('password')">🔓 Quebrador de Senhas</button>
+          <button class="preset-btn" onclick="HackerLab.addPreset('scanner')">📡 Scanner de Rede</button>
+          <button class="preset-btn" onclick="HackerLab.addPreset('grabber')">🎯 Grabber de IP</button>
+          <button class="preset-btn" onclick="HackerLab.addPreset('ddos')">⚔️ DDoS Simulator</button>
+          <button class="preset-btn" onclick="HackerLab.addPreset('phishing')">🎣 Phishing Kit</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: My Tools + Terminal -->
+    <div class="hack-right">
+      <div class="hack-panel">
+        <h3>🗃️ Minhas Ferramentas</h3>
+        <div id="hackToolsGrid" class="hack-tools-grid"></div>
+        <p class="empty-state" id="hackEmpty">Nenhuma ferramenta criada.<br/><small>Crie uma ou use as pré-definidas!</small></p>
+      </div>
+
+      <div class="hack-panel terminal-panel">
+        <h3>💻 Terminal Hacker</h3>
+        <div id="hackTerminal" class="hack-terminal"></div>
+        <div class="terminal-input-row">
+          <span class="terminal-prompt">root@codeplay:~#</span>
+          <input type="text" id="terminalInput" class="terminal-input" placeholder="Digite um comando..." autocomplete="off"/>
+          <button class="btn btn--danger btn--sm" onclick="HackerLab.execCmd()">↵</button>
+        </div>
+        <div class="terminal-hints">Comandos: <code>help</code> <code>list</code> <code>status</code> <code>scan</code> <code>clear</code> <code>run [nome]</code></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="footer"><div class="footer__bottom"><p>© 2026 CodePlay. 100% Fictício.</p></div></footer>
+<script src="js/state.js"></script>
+<script src="js/hacker.js"></script>
+<script src="js/main.js"></script>
+</body></html>
