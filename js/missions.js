@@ -192,22 +192,49 @@ const MS = {
     try { const u = JSON.parse(localStorage.getItem('cp_user')||'null'); if(u) return u; } catch{}
     try {
       const cu = JSON.parse(localStorage.getItem('cp_currentUser')||'null');
-      if(cu) return {username:cu.username||cu.name||'Jogador',wallet:cu.wallet||1000,xp:cu.xp||0,level:cu.level||1,avatar:cu.avatar||'👤'};
+      if(cu){ const cpW2=parseFloat(localStorage.getItem('cp_wallet')||String(cu.wallet||1000)); return {username:cu.username||cu.name||'Jogador',wallet:cpW2,xp:cu.xp||0,level:cu.level||1,avatar:cu.avatar||'👤'}; }
     } catch{}
     const s = this.s;
-    return {username:'Visitante',wallet:s.wallet||1000,xp:s.xp||0,level:s.level||1,avatar:'👤'};
+    const cpW = parseFloat(localStorage.getItem('cp_wallet') || String(s.wallet || 1000));
+    return {username:'Visitante', wallet:cpW, xp:s.xp||0, level:s.level||1, avatar:'👤'};
   },
 
   applyReward(xp, money) {
     const s = this.s;
-    s.xp     = (s.xp||0)     + xp;
-    s.wallet = (s.wallet||1000) + money;
+    s.xp     = (s.xp||0) + xp;
     s.level  = 1 + Math.floor(s.xp / XP_PER_LVL);
-    // propagate to local user if present
+
+    // ── canonical game wallet (read by all pages via State.getWallet) ──
+    const cpWallet = parseFloat(localStorage.getItem('cp_wallet') || '1000');
+    const newWallet = cpWallet + money;
+    localStorage.setItem('cp_wallet', String(newWallet));
+    s.wallet = newWallet; // keep cp_missions.wallet in sync too
+
+    // ── propagate to cp_currentUser (offline auth) ──────────────
     try {
-      const cu = JSON.parse(localStorage.getItem('cp_currentUser')||'null');
-      if(cu){ cu.xp=(cu.xp||0)+xp; cu.wallet=(cu.wallet||1000)+money; cu.level=1+Math.floor(cu.xp/XP_PER_LVL); localStorage.setItem('cp_currentUser',JSON.stringify(cu)); }
-    } catch{}
+      const cu = JSON.parse(localStorage.getItem('cp_currentUser') || 'null');
+      if (cu) {
+        cu.xp     = (cu.xp    || 0) + xp;
+        cu.wallet = newWallet;
+        cu.level  = 1 + Math.floor(cu.xp / XP_PER_LVL);
+        localStorage.setItem('cp_currentUser', JSON.stringify(cu));
+      }
+    } catch {}
+
+    // ── propagate to cp_user (api.js / backend session) ─────────
+    try {
+      const u = JSON.parse(localStorage.getItem('cp_user') || 'null');
+      if (u) {
+        u.xp     = (u.xp    || 0) + xp;
+        u.wallet = newWallet;
+        u.level  = 1 + Math.floor(u.xp / XP_PER_LVL);
+        localStorage.setItem('cp_user', JSON.stringify(u));
+      }
+    } catch {}
+
+    // ── update State wallet UI on same page (if State is loaded) ─
+    try { if (typeof State !== 'undefined') State.updateWalletUI(); } catch {}
+
     this.save(s);
   },
   isLoggedIn() { return !!(localStorage.getItem('cp_token') && localStorage.getItem('cp_user')); }
@@ -364,7 +391,8 @@ function renderHUD() {
   const p = MS.getPlayer();
   const s = MS.s;
   const xp     = s.xp     || p.xp     || 0;
-  const wallet = s.wallet || p.wallet || 1000;
+  // canonical wallet: cp_wallet > cp_missions.wallet > user wallet > 1000
+  const wallet = parseFloat(localStorage.getItem('cp_wallet') || String(s.wallet || p.wallet || 1000));
   const level  = 1 + Math.floor(xp / XP_PER_LVL);
   const set = (id,v)=>{ const e=document.getElementById(id); if(e) e.textContent=v; };
   set('hudUsername', p.username||'Visitante');
