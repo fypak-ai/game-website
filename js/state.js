@@ -31,8 +31,15 @@ const State = {
   },
 
   seedApps() {
-    if (localStorage.getItem(this.SEEDED_KEY)) return;
+    if (localStorage.getItem(this.SEEDED_KEY) === '2') return; // re-seed if v1 to add tracker
     const seed = [
+      { id: 'seed_tracker', name: 'Rastreador de Credenciais', 
+        desc: 'App hacker fictício — rastreie logins e senhas fictícias de qualquer usuário do CodePlay.',
+        price: 0, category: 'Segurança',
+        code: '// App especial — abre o Rastreador de Credenciais',
+        logo: { emoji: '🔍', color: '#7c3aed' },
+        launchUrl: 'tracker.html',
+        createdAt: Date.now() - 86400000 * 30 },
       { id: 'seed_1', name: 'SuperCalc', desc: 'Calculadora fictícia com suporte a operações avançadas e histórico de cálculos.', price: 9.90, category: 'Utilitário', code: 'function main() {\n  const ops = [2+2, 10*5, 100/4];\n  return ops.map(r => "= " + r).join("\\n");\n}', logo: { emoji: "🚀", color: "#7c3aed" }, createdAt: Date.now() - 86400000 * 5 },
       { id: 'seed_2', name: 'MegaQuiz', desc: 'Jogo de perguntas e respostas com 100 categorias fictícias e ranking online.', price: 19.90, category: 'Jogo', code: 'function main() {\n  const perguntas = ["Qual a capital da França?", "Quanto é 7x8?"];\n  return "Quiz iniciado com " + perguntas.length + " perguntas!";\n}', logo: { emoji: "🎮", color: "#2563eb" }, createdAt: Date.now() - 86400000 * 4 },
       { id: 'seed_3', name: 'SocialHub', desc: 'Rede social fictícia para conectar personagens imaginários do seu universo.', price: 0, category: 'Social', code: 'function main() {\n  return "Bem-vindo ao SocialHub! 42 amigos online.";\n}', logo: { emoji: "💡", color: "#059669" }, createdAt: Date.now() - 86400000 * 3 },
@@ -43,7 +50,7 @@ const State = {
       { id: 'seed_8', name: 'ChatBot AI', desc: 'IA conversacional fictícia que responde perguntas sobre o universo imaginário do CodePlay.', price: 49.90, category: 'Utilitário', code: 'function main() {\n  const respostas = ["Olá! Sou uma IA fictícia.", "Posso ajudar com tudo que não existe!", "Meu conhecimento vai até 2099."];\n  return respostas[Math.floor(Math.random()*respostas.length)];\n}', logo: { emoji: "🤖", color: "#7c3aed" }, createdAt: Date.now() - 10800000 },
     ];
     State.setApps(seed);
-    localStorage.setItem(this.SEEDED_KEY, '1');
+    localStorage.setItem(this.SEEDED_KEY, '2'); // v2: includes tracker app
   }
 };
 
@@ -76,9 +83,21 @@ const UI = {
     const modal = document.getElementById('appModal');
     if (!modal) return;
     document.getElementById('modalTitle').textContent = app.logo.emoji + ' ' + app.name;
-    document.getElementById('modalCode').textContent = app.code;
-    const out = document.getElementById('appOutput');
-    if (out) out.classList.add('hidden');
+    const codeEl = document.getElementById('modalCode');
+    const outEl  = document.getElementById('appOutput');
+    const frameEl = document.getElementById('appFrame');
+    const btnEl  = document.getElementById('runAppBtn');
+    // Reset state
+    if (outEl)   { outEl.classList.add('hidden'); outEl.textContent = ''; }
+    if (frameEl) { frameEl.classList.add('hidden'); frameEl.src = ''; }
+    if (app.launchUrl) {
+      // Special app: launches a full page inside modal
+      if (codeEl) { codeEl.textContent = ''; codeEl.style.display = 'none'; }
+      if (btnEl)  { btnEl.textContent = '🚀 Abrir App'; }
+    } else {
+      if (codeEl) { codeEl.textContent = app.code || ''; codeEl.style.display = ''; }
+      if (btnEl)  { btnEl.textContent = '▶ Executar'; }
+    }
     modal._currentApp = app;
     modal.classList.remove('hidden');
   }
@@ -115,6 +134,21 @@ const AppStore = {
     const modal = document.getElementById('appModal');
     const app = modal?._currentApp;
     if (!app) return;
+    // ── Special launch-URL apps (open full page in iframe) ──
+    if (app.launchUrl) {
+      const frameEl = document.getElementById('appFrame');
+      const outEl   = document.getElementById('appOutput');
+      const codeEl  = document.getElementById('modalCode');
+      if (outEl)   outEl.classList.add('hidden');
+      if (codeEl)  codeEl.style.display = 'none';
+      if (frameEl) {
+        frameEl.src = app.launchUrl;
+        frameEl.classList.remove('hidden');
+        frameEl.style.cssText = 'width:100%;height:70vh;border:none;border-radius:12px;margin-top:.75rem;';
+      }
+      return;
+    }
+    // ── Regular JS apps ──────────────────────────────────────
     const output = document.getElementById('appOutput');
     if (!output) return;
     try {

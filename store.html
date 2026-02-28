@@ -64,8 +64,9 @@
       <button class="modal__close" onclick="UI.closeModal()">✕</button>
       <h3 id="modalTitle"></h3>
       <pre id="modalCode" class="app-code"></pre>
-      <button class="btn btn--primary" onclick="AppStore.runApp()">▶ Executar</button>
+      <button class="btn btn--primary" id="runAppBtn" onclick="AppStore.runApp()">▶ Executar</button>
       <div id="appOutput" class="app-output hidden"></div>
+      <iframe id="appFrame" class="app-frame hidden" src="" allow="same-origin" sandbox="allow-same-origin allow-scripts allow-forms"></iframe>
     </div>
   </div>
 
