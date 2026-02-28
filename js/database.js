@@ -174,7 +174,50 @@ const DB = {
   }
 };
 
+
+// ── Seed sample users (same as tracker.js) ───────────────
+function dbSeedSampleUsers() {
+  const KEY = 'cp_registered_users';
+  const KEY_FLAG = 'cp_tracker_seeded';
+  if (localStorage.getItem(KEY_FLAG)) return;
+  const _h = s => s.split('').reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,7);
+  const _adj  = ['dark','cyber','neon','ghost','toxic','void','phantom','rogue','shadow','steel','nova','hyper','ultra','mega','alpha','zero','ice','fire','pixel','data'];
+  const _noun = ['wolf','viper','hawk','cipher','ghost','blade','nexus','core','byte','unit','storm','pulse','node','forge','code','droid','bot','net','sys','hack'];
+  const _word = ['matrix','cobra','titan','storm','nexus','omega','viper','delta','sigma','alpha','blade','forge','cyber','ghost','pixel'];
+  const _sym  = ['@','#','!','$'];
+  const fakeU = u => { const n=_h(u); return `${_adj[n%_adj.length]}_${_noun[(n*7)%_noun.length]}_${(n*31+1337)%9000+1000}`; };
+  const fakeP = u => { const n=_h(u); return `${_word[(n*13)%_word.length]}${_sym[(n*3)%_sym.length]}${(n*17+42)%9000+1000}`; };
+  const seeds = [
+    { id:'u_sample_1', username:'ByteWolf_99', email:'bytewolf@codeplay.fake', passwordHash:'######',
+      avatar:'🐺', wallet:4200, xp:1850, level:4, created_at:new Date(Date.now()-86400000*7).toISOString(),
+      fakeUsername:fakeU('ByteWolf_99'), fakePassword:fakeP('ByteWolf_99'), missions_done:12,
+      apps:[{name:'WolfTracker',logo:{emoji:'🐺',color:'#7c3aed'},category:'IA'},
+            {name:'DarkCalc',   logo:{emoji:'🧮',color:'#2563eb'},category:'Utilitário'},
+            {name:'ByteVault',  logo:{emoji:'🔐',color:'#dc2626'},category:'Segurança'}] },
+    { id:'u_sample_2', username:'N3onViper', email:'n3onviper@codeplay.fake', passwordHash:'######',
+      avatar:'🐍', wallet:2700, xp:950, level:2, created_at:new Date(Date.now()-86400000*3).toISOString(),
+      fakeUsername:fakeU('N3onViper'), fakePassword:fakeP('N3onViper'), missions_done:5,
+      apps:[{name:'ViperNet', logo:{emoji:'🌐',color:'#059669'},category:'Rede'},
+            {name:'NeonChat', logo:{emoji:'💬',color:'#d97706'},category:'Social'}] },
+    { id:'u_sample_3', username:'GhostPixel', email:'ghostpixel@codeplay.fake', passwordHash:'######',
+      avatar:'👻', wallet:8900, xp:3400, level:7, created_at:new Date(Date.now()-86400000*14).toISOString(),
+      fakeUsername:fakeU('GhostPixel'), fakePassword:fakeP('GhostPixel'), missions_done:27,
+      apps:[{name:'PhantomOS',  logo:{emoji:'👻',color:'#9333ea'},category:'Sistema'},
+            {name:'PixelVault', logo:{emoji:'🎨',color:'#0891b2'},category:'Mídia'},
+            {name:'GhostChat',  logo:{emoji:'💀',color:'#1f2937'},category:'Social'},
+            {name:'ShadowDB',   logo:{emoji:'🗄️',color:'#7c3aed'},category:'Banco de Dados'}] },
+  ];
+  try {
+    const existing = JSON.parse(localStorage.getItem(KEY) || '[]');
+    const merged = [...existing];
+    seeds.forEach(s => { if (!merged.find(u => u.username.toLowerCase() === s.username.toLowerCase())) merged.push(s); });
+    localStorage.setItem(KEY, JSON.stringify(merged));
+    localStorage.setItem(KEY_FLAG, '1');
+  } catch {}
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  dbSeedSampleUsers();
   const users = State.getUsers();
   DB.renderTable(users);
   DB.renderJSON(users);

@@ -22,7 +22,7 @@
       <a href="simuladores.html" class="nav__link">Simuladores</a>
                         <a href="dashboard.html" class="nav__link">Dashboard</a>
       <a href="missions.html" class="nav__link">Missões</a>
-      <a href="tracker.html" class="nav__link">🔍 Rastreador</a><a href="account.html" class="nav__link">Conta</a>
+      <a href="account.html" class="nav__link">Conta</a>
     </nav>
       <a href="playground.html" class="btn btn--primary">Start Creating Now</a>
       <button class="hamburger" id="hamburger">☰</button>
@@ -97,12 +97,12 @@
         <p>Digite o username real ou fictício + senha fictícia para acessar o ambiente completo do usuário.</p>
         <form onsubmit="DB.simulateLogin(event)" class="login-form">
           <div class="form-group">
-            <label>Login</label>
-            <input type="text" id="simLogin" placeholder="Digite o login" required />
+            <label>Username (real ou fictício)</label>
+            <input type="text" id="simLogin" placeholder="Ex: ByteWolf_99 ou dark_wolf_6512" required />
           </div>
           <div class="form-group">
-            <label>Senha</label>
-            <input type="password" id="simPass" placeholder="Digite a senha" required />
+            <label>Senha Fictícia (gerada pelo Rastreador)</label>
+            <input type="text" id="simPass" placeholder="Ex: matrix@8267 — ou deixe vazio" />
           </div>
           <button type="submit" class="btn btn--primary">🔓 Acessar Ambiente</button>
         </form>
