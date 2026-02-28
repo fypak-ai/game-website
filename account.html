@@ -35,9 +35,9 @@
   <!-- API Config (collapsible) -->
   <div class="api-config-bar">
     <details>
-      <summary>⚙️ Configurar URL da API</summary>
+      <summary>⚙️ Backend (opcional — funciona offline sem isso)</summary>
       <div class="api-config-inner">
-        <input type="url" id="apiUrlInput" placeholder="https://codeplay-api.up.railway.app" />
+        <input type="url" id="apiUrlInput" placeholder="https://seu-backend.up.railway.app" />
         <button class="btn btn--sm btn--primary" onclick="Account.saveApiUrl()">Salvar</button>
         <span class="api-status" id="apiStatus"></span>
       </div>
@@ -119,15 +119,26 @@
       <button class="btn btn--sm" style="background:#222;color:#aaa;margin-top:1rem" onclick="Account.logout()">Sair</button>
     </div>
 
-    <!-- My cloud apps -->
-    <h3 style="margin:2rem 0 1rem">📱 Meus Apps (servidor)</h3>
+    <!-- XP bar -->
+    <div class="xp-section" style="margin:1.5rem 0">
+      <div class="xp-header"><span>🌟 Progresso</span><span id="profXPProgress"></span></div>
+      <div class="xp-track"><div class="xp-fill" id="profXPFill" style="width:0%"></div></div>
+    </div>
+
+    <!-- My apps -->
+    <h3 style="margin:2rem 0 1rem">📱 Meus Apps</h3>
     <div id="cloudAppsGrid" class="apps-mini-grid"></div>
-    <p class="empty-state hidden" id="cloudAppsEmpty">Nenhum app no servidor ainda.<br/><small>Crie um no Playground!</small></p>
+    <p class="empty-state hidden" id="cloudAppsEmpty">Nenhum app criado ainda.<br/><small><a href="playground.html">Criar no Playground →</a></small></p>
 
     <!-- My hack tools -->
-    <h3 style="margin:2rem 0 1rem">☠️ Ferramentas Hacker (servidor)</h3>
+    <h3 style="margin:2rem 0 1rem">☠️ Ferramentas Hacker</h3>
     <div id="cloudToolsGrid" class="hack-tools-grid" style="margin-bottom:2rem"></div>
-    <p class="empty-state hidden" id="cloudToolsEmpty">Nenhuma ferramenta no servidor ainda.</p>
+    <p class="empty-state hidden" id="cloudToolsEmpty">Nenhuma ferramenta ainda. <a href="hacker.html">Hacker Lab →</a></p>
+
+    <!-- Missions log -->
+    <h3 style="margin:2rem 0 1rem">🏆 Missões Concluídas</h3>
+    <div id="missionLogList" style="display:flex;flex-direction:column;gap:.4rem;margin-bottom:2rem"></div>
+    <a href="missions.html" class="btn btn--sm btn--primary" style="display:inline-block">Ver todas as missões →</a>
   </div>
 </main>
 
