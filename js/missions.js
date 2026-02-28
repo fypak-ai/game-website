@@ -271,7 +271,7 @@ function generateMissions() {
   const shuffled = [...MISSION_POOL].sort(()=>Math.random()-.5);
   s.active = shuffled.slice(0,4).map(m=>({
     ...m, instanceId: m.id+'_'+Date.now(),
-    startedAt: Date.now(), deadline: Date.now()+m.time*1000, status:'active', notified:false
+    startedAt: Date.now(), deadline: Date.now()+60*1000, status:'active', notified:false
   }));
   MS.save(s); renderAll();
 }
@@ -359,7 +359,7 @@ function renderMissions() {
     const rem = Math.max(0, Math.floor((m.deadline - Date.now())/1000));
     const mm = String(Math.floor(rem/60)).padStart(2,'0');
     const ss = String(rem%60).padStart(2,'0');
-    const urg = rem < 30 ? 'mission-card--urgent' : rem < 60 ? 'mission-card--warning' : '';
+    const urg = rem <= 0 ? 'mission-card--expired' : rem < 10 ? 'mission-card--urgent' : rem < 30 ? 'mission-card--warning' : '';
     const verified = checkVerified(m);
     return `<div class="mission-card ${urg}" style="--m-color:${m.color}">
       <div class="mission-card__head">
