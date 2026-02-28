@@ -1,0 +1,35 @@
+
+.api-config-bar { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: .75rem 1rem; margin-bottom: 1.5rem; font-size: .85rem; }
+.api-config-bar summary { cursor: pointer; color: var(--text-muted); }
+.api-config-inner { display: flex; gap: .5rem; align-items: center; margin-top: .75rem; flex-wrap:wrap; }
+.api-config-inner input { flex:1; min-width:200px; padding:.4rem .7rem; border:1px solid var(--border); border-radius:6px; background:var(--surface2); color:var(--text); font-size:.85rem; outline:none; }
+.api-status { font-size: .8rem; color: var(--text-muted); }
+
+.auth-tabs { display: flex; gap: .5rem; margin-bottom: 1.25rem; }
+.auth-tab { padding: .55rem 1.4rem; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text-muted); cursor: pointer; font-size: .9rem; font-weight: 600; transition: var(--transition); }
+.auth-tab.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+.auth-form { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; max-width: 440px; }
+.auth-form h3 { margin-bottom: 1rem; }
+.auth-msg { margin-top: .75rem; padding: .6rem .9rem; border-radius: 6px; font-size: .875rem; font-weight: 600; }
+.auth-msg--ok  { background: rgba(34,197,94,.15); border:1px solid var(--success); color:var(--success); }
+.auth-msg--err { background: rgba(239,68,68,.15); border:1px solid var(--danger); color:var(--danger); }
+
+/* Avatar picker */
+.avatar-picker { display: flex; gap: .4rem; flex-wrap: wrap; }
+.avatar-opt { font-size: 1.5rem; cursor: pointer; padding: .3rem; border-radius: 8px; border: 2px solid transparent; transition: var(--transition); }
+.avatar-opt:hover { border-color: var(--primary); }
+.avatar-opt.selected { border-color: var(--primary); background: var(--primary)22; }
+
+/* Profile card */
+.profile-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; display: flex; flex-direction:column; align-items: center; text-align: center; max-width: 500px; }
+.profile-avatar { font-size: 4rem; margin-bottom: .75rem; }
+.profile-info h2 { margin-bottom: .2rem; }
+.profile-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 1rem 0; background: var(--surface2); border-radius: 8px; padding: 1rem; width: 100%; }
+.stat { text-align: center; }
+.stat span { display: block; font-size: 1.1rem; font-weight: 700; color: var(--primary); }
+.stat small { color: var(--text-muted); font-size: .75rem; }
+.profile-date { font-size: .8rem; color: var(--text-muted); }
+.apps-mini-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: .75rem; }
+
+/* Reuse app-card from components */

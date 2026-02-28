@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Conta – CodePlay</title>
+<link rel="stylesheet" href="styles/main.css"/>
+<link rel="stylesheet" href="styles/components.css"/>
+<link rel="stylesheet" href="styles/account.css"/>
+</head>
+<body>
+<header class="header" id="header">
+  <div class="container header__inner">
+    <a href="index.html" class="logo"><span class="logo__icon">⚡</span><span class="logo__text">CodePlay</span></a>
+    <nav class="nav" id="nav">
+      <a href="index.html" class="nav__link">Home</a>
+      <a href="playground.html" class="nav__link">Playground</a>
+      <a href="store.html" class="nav__link">Loja</a>
+      <a href="community.html" class="nav__link">Comunidade</a>
+      <a href="database.html" class="nav__link">Banco de Dados</a>
+      <a href="hacker.html" class="nav__link">Hacker</a>
+      <a href="simuladores.html" class="nav__link">Simuladores</a>
+      <a href="account.html" class="nav__link active">Conta</a>
+    </nav>
+    <a href="playground.html" class="btn btn--primary">Start Creating Now</a>
+    <button class="hamburger" id="hamburger">☰</button>
+  </div>
+</header>
+
+<main class="page-main container">
+  <h1 class="page-title">👤 Minha Conta</h1>
+  <p class="page-subtitle">Crie sua conta real para salvar apps, saldo e ferramentas no servidor — sincronizado em qualquer dispositivo.</p>
+
+  <!-- API Config (collapsible) -->
+  <div class="api-config-bar">
+    <details>
+      <summary>⚙️ Configurar URL da API</summary>
+      <div class="api-config-inner">
+        <input type="url" id="apiUrlInput" placeholder="https://codeplay-api.up.railway.app" />
+        <button class="btn btn--sm btn--primary" onclick="Account.saveApiUrl()">Salvar</button>
+        <span class="api-status" id="apiStatus"></span>
+      </div>
+    </details>
+  </div>
+
+  <!-- AUTH FORMS (shown when logged out) -->
+  <div id="authSection">
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" onclick="Account.showTab('login')">🔐 Entrar</button>
+      <button class="auth-tab" id="tabRegister" onclick="Account.showTab('register')">✨ Criar Conta</button>
+    </div>
+
+    <!-- Login -->
+    <div class="auth-form" id="formLogin">
+      <h3>Bem-vindo de volta!</h3>
+      <div class="form-group">
+        <label>Usuário ou Email</label>
+        <input type="text" id="loginUser" placeholder="seu_usuario" autocomplete="username"/>
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password"/>
+      </div>
+      <button class="btn btn--primary btn--full" onclick="Account.login()">🔐 Entrar</button>
+      <div id="loginMsg" class="auth-msg hidden"></div>
+    </div>
+
+    <!-- Register -->
+    <div class="auth-form hidden" id="formRegister">
+      <h3>Criar nova conta</h3>
+      <div class="form-group">
+        <label>Avatar</label>
+        <div class="avatar-picker" id="avatarPicker">
+          <span class="avatar-opt selected" data-v="👤">👤</span>
+          <span class="avatar-opt" data-v="🧑‍💻">🧑‍💻</span>
+          <span class="avatar-opt" data-v="🧙">🧙</span>
+          <span class="avatar-opt" data-v="🤖">🤖</span>
+          <span class="avatar-opt" data-v="☠️">☠️</span>
+          <span class="avatar-opt" data-v="🦊">🦊</span>
+          <span class="avatar-opt" data-v="🐉">🐉</span>
+          <span class="avatar-opt" data-v="👾">👾</span>
+          <span class="avatar-opt" data-v="🚀">🚀</span>
+          <span class="avatar-opt" data-v="⚡">⚡</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Usuário</label>
+        <input type="text" id="regUser" placeholder="meu_usuario" maxlength="30" autocomplete="username"/>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="regEmail" placeholder="email@exemplo.com" autocomplete="email"/>
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" id="regPass" placeholder="mínimo 4 caracteres" autocomplete="new-password"/>
+      </div>
+      <button class="btn btn--primary btn--full" onclick="Account.register()">✨ Criar Conta</button>
+      <div id="registerMsg" class="auth-msg hidden"></div>
+    </div>
+  </div>
+
+  <!-- PROFILE (shown when logged in) -->
+  <div id="profileSection" class="hidden">
+    <div class="profile-card">
+      <div class="profile-avatar" id="profAvatar">👤</div>
+      <div class="profile-info">
+        <h2 id="profUsername"></h2>
+        <p id="profEmail" class="text-muted"></p>
+        <div class="profile-stats">
+          <div class="stat"><span id="profWallet">R$ 0</span><small>Carteira</small></div>
+          <div class="stat"><span id="profLevel">1</span><small>Nível</small></div>
+          <div class="stat"><span id="profXP">0</span><small>XP</small></div>
+          <div class="stat"><span id="profApps">0</span><small>Apps</small></div>
+        </div>
+        <p class="profile-date">Membro desde <span id="profDate"></span></p>
+      </div>
+      <button class="btn btn--sm" style="background:#222;color:#aaa;margin-top:1rem" onclick="Account.logout()">Sair</button>
+    </div>
+
+    <!-- My cloud apps -->
+    <h3 style="margin:2rem 0 1rem">📱 Meus Apps (servidor)</h3>
+    <div id="cloudAppsGrid" class="apps-mini-grid"></div>
+    <p class="empty-state hidden" id="cloudAppsEmpty">Nenhum app no servidor ainda.<br/><small>Crie um no Playground!</small></p>
+
+    <!-- My hack tools -->
+    <h3 style="margin:2rem 0 1rem">☠️ Ferramentas Hacker (servidor)</h3>
+    <div id="cloudToolsGrid" class="hack-tools-grid" style="margin-bottom:2rem"></div>
+    <p class="empty-state hidden" id="cloudToolsEmpty">Nenhuma ferramenta no servidor ainda.</p>
+  </div>
+</main>
+
+<footer class="footer"><div class="footer__bottom"><p>© 2026 CodePlay.</p></div></footer>
+<script src="js/api.js"></script>
+<script src="js/account.js"></script>
+<script src="js/main.js"></script>
+</body></html>
