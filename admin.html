@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>&#9881; CodePlay Admin</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:#0f0f13;color:#e2e8f0;min-height:100vh}
+.lw{display:flex;align-items:center;justify-content:center;min-height:100vh}
+.lb{background:#1a1a2e;border:1px solid #2d2d44;border-radius:16px;padding:40px;width:340px;text-align:center}
+.lb h1{font-size:1.5rem;margin-bottom:8px;color:#a78bfa}
+.lb p{color:#64748b;margin-bottom:24px;font-size:.9rem}
+.lb input{width:100%;background:#0f0f1a;border:1px solid #2d2d44;color:#e2e8f0;padding:12px;border-radius:8px;font-size:1rem;margin-bottom:16px;outline:none}
+.lb input:focus{border-color:#7c3aed}
+.btn{background:#7c3aed;color:#fff;border:none;padding:12px 24px;border-radius:8px;cursor:pointer;font-size:1rem;width:100%;transition:.2s}
+.btn:hover{background:#6d28d9}
+.bsm{width:auto!important;padding:6px 14px!important;font-size:.8rem!important;border-radius:6px!important;margin-left:4px}
+.bd{background:#ef4444}.bd:hover{background:#dc2626}
+.bs{background:#10b981}.bs:hover{background:#059669}
+.bi{background:#3b82f6}.bi:hover{background:#2563eb}
+.al{display:flex;min-height:100vh}
+.sb{width:220px;background:#13131f;border-right:1px solid #2d2d44;flex-shrink:0;padding:20px 0}
+.sb .logo{padding:0 20px 20px;font-size:1.1rem;font-weight:700;color:#a78bfa;border-bottom:1px solid #2d2d44;margin-bottom:12px}
+.sb a{display:block;padding:10px 20px;color:#94a3b8;text-decoration:none;font-size:.9rem;cursor:pointer;transition:.15s}
+.sb a:hover,.sb a.ac{color:#e2e8f0;background:#1e1e30}
+.mn{flex:1;padding:28px;overflow:auto}
+.pg{display:none}.pg.ac{display:block}
+h2{font-size:1.3rem;margin-bottom:20px;color:#a78bfa}
+.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:28px}
+.sc{background:#1a1a2e;border:1px solid #2d2d44;border-radius:12px;padding:20px;text-align:center}
+.sc .v{font-size:2rem;font-weight:700;color:#a78bfa}
+.sc .l{font-size:.8rem;color:#64748b;margin-top:4px}
+table{width:100%;border-collapse:collapse;background:#1a1a2e;border-radius:12px;overflow:hidden;font-size:.85rem}
+th{background:#13131f;padding:10px 14px;text-align:left;color:#64748b;font-weight:600;font-size:.8rem;text-transform:uppercase}
+td{padding:10px 14px;border-bottom:1px solid #1e1e30;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#1e1e30}
+.tb{display:flex;gap:10px;margin-bottom:16px;align-items:center;flex-wrap:wrap}
+.tb input{background:#1a1a2e;border:1px solid #2d2d44;color:#e2e8f0;padding:8px 12px;border-radius:8px;font-size:.85rem;outline:none;flex:1;min-width:200px}
+.tb input:focus{border-color:#7c3aed}
+.tr{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#1a1a2e;border:1px solid #2d2d44;border-radius:10px;margin-bottom:10px}
+.tg{position:relative;width:44px;height:24px;cursor:pointer}
+.tg input{opacity:0;width:0;height:0}
+.ts{position:absolute;inset:0;background:#2d2d44;border-radius:24px;transition:.3s}
+.ts:before{content:'';position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:#94a3b8;border-radius:50%;transition:.3s}
+.tg input:checked+.ts{background:#7c3aed}
+.tg input:checked+.ts:before{transform:translateX(20px);background:#fff}
+.li{background:#1a1a2e;border:1px solid #2d2d44;border-radius:8px;padding:10px 14px;margin-bottom:8px;font-size:.8rem;display:flex;gap:12px}
+.li .tm{color:#64748b;white-space:nowrap}
+.li .ac2{color:#a78bfa;font-weight:600}
+.mbg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:center;justify-content:center}
+.mbg.op{display:flex}
+.md{background:#1a1a2e;border:1px solid #2d2d44;border-radius:16px;padding:28px;width:380px;max-width:95vw}
+.md h3{margin-bottom:16px;color:#a78bfa}
+.md input{width:100%;background:#0f0f1a;border:1px solid #2d2d44;color:#e2e8f0;padding:9px 12px;border-radius:8px;font-size:.9rem;margin-bottom:10px;outline:none}
+.md input:focus{border-color:#7c3aed}
+.mda{display:flex;gap:10px;margin-top:8px}
+#toast{position:fixed;bottom:24px;right:24px;background:#1a1a2e;border:1px solid #7c3aed;color:#e2e8f0;padding:12px 20px;border-radius:10px;font-size:.9rem;z-index:200;display:none}
+</style>
+</head>
+<body>
+
+<div class="lw" id="lw">
+  <div class="lb">
+    <h1>&#9881; Admin CodePlay</h1>
+    <p>Painel de controle restrito</p>
+    <input type="password" id="sec" placeholder="Senha admin" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <button class="btn" onclick="doLogin()">Entrar</button>
+    <p id="lerr" style="color:#ef4444;margin-top:12px;font-size:.85rem"></p>
+  </div>
+</div>
+
+<div class="al" id="app" style="display:none">
+  <div class="sb">
+    <div class="logo">&#9881; Admin</div>
+    <a class="ac" onclick="nav('dash',this)">&#128200; Dashboard</a>
+    <a onclick="nav('users',this)">&#128100; Usuarios</a>
+    <a onclick="nav('apps',this)">&#128241; Apps</a>
+    <a onclick="nav('feat',this)">&#9881; Features</a>
+    <a onclick="nav('inter',this)">&#128257; Interacoes</a>
+    <a onclick="nav('logs',this)">&#128203; Logs</a>
+    <a onclick="doLogout()" style="color:#ef4444;margin-top:20px">&#10005; Sair</a>
+  </div>
+  <div class="mn">
+    <div class="pg ac" id="pg-dash">
+      <h2>&#128200; Dashboard</h2>
+      <div class="sg" id="sg"></div>
+    </div>
+    <div class="pg" id="pg-users">
+      <h2>&#128100; Usuarios</h2>
+      <div class="tb">
+        <input id="uq" placeholder="Buscar username / email..." oninput="loadU()"/>
+        <button class="btn bsm bs" onclick="openCU()">+ Criar</button>
+      </div>
+      <table><thead><tr><th>ID</th><th>Av</th><th>Username</th><th>Email</th><th>Saldo</th><th>Lv</th><th>XP</th><th>Criado</th><th>Acoes</th></tr></thead>
+      <tbody id="utb"></tbody></table>
+    </div>
+    <div class="pg" id="pg-apps">
+      <h2>&#128241; Apps</h2>
+      <div class="tb">
+        <input id="aq" placeholder="Buscar app / dono..." oninput="loadA()"/>
+        <button class="btn bsm bs" onclick="openIA()">+ Injetar</button>
+      </div>
+      <table><thead><tr><th>ID</th><th>Em</th><th>Nome</th><th>Cat</th><th>Preco</th><th>DL</th><th>Dono</th><th>Criado</th><th>Acoes</th></tr></thead>
+      <tbody id="atb"></tbody></table>
+    </div>
+    <div class="pg" id="pg-feat">
+      <h2>&#9881; Feature Flags</h2>
+      <div id="fl"></div>
+    </div>
+    <div class="pg" id="pg-inter">
+      <h2>&#128257; Ultimas Compras</h2>
+      <table><thead><tr><th>ID</th><th>Usuario</th><th>App</th><th>Valor</th><th>Data</th></tr></thead>
+      <tbody id="itb"></tbody></table>
+    </div>
+    <div class="pg" id="pg-logs">
+      <h2>&#128203; Logs Admin</h2>
+      <div id="ll"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="mbg" id="meu">
+  <div class="md">
+    <h3>&#9998; Editar Usuario</h3>
+    <input type="number" id="ew" placeholder="Saldo"/>
+    <input type="number" id="el" placeholder="Level"/>
+    <input type="number" id="ex" placeholder="XP"/>
+    <label style="display:flex;align-items:center;gap:8px;font-size:.85rem;margin-bottom:12px;color:#94a3b8">
+      <input type="checkbox" id="eb" style="width:auto"/> Banir usuario
+    </label>
+    <div class="mda">
+      <button class="btn bsm bs" onclick="saveEU()">Salvar</button>
+      <button class="btn bsm" onclick="cm('meu')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Create User Modal -->
+<div class="mbg" id="mcu">
+  <div class="md">
+    <h3>+ Criar Usuario</h3>
+    <input type="text" id="cun" placeholder="Username"/>
+    <input type="email" id="cue" placeholder="Email"/>
+    <input type="password" id="cup" placeholder="Senha"/>
+    <input type="number" id="cuw" placeholder="Saldo inicial (padrao 1000)"/>
+    <div class="mda">
+      <button class="btn bsm bs" onclick="createU()">Criar</button>
+      <button class="btn bsm" onclick="cm('mcu')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Inject App Modal -->
+<div class="mbg" id="mia">
+  <div class="md">
+    <h3>+ Injetar App</h3>
+    <input type="number" id="iao" placeholder="owner_id (ID do usuario)"/>
+    <input type="text" id="ian" placeholder="Nome do app"/>
+    <input type="text" id="iad" placeholder="Descricao"/>
+    <input type="text" id="iac" placeholder="Categoria (ex: Utilitario)"/>
+    <input type="number" id="iap" placeholder="Preco (moedas)"/>
+    <input type="text" id="iae" placeholder="Emoji"/>
+    <div class="mda">
+      <button class="btn bsm bs" onclick="injectA()">Injetar</button>
+      <button class="btn bsm" onclick="cm('mia')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const BASE = localStorage.getItem('cp_api_url') || 'https://codeplay-backend-production.up.railway.app';
+let tok = sessionStorage.getItem('cp_admin_tok') || '';
+let euid = null;
+
+function toast(msg, ok) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.borderColor = ok === false ? '#ef4444' : '#7c3aed';
+  t.style.display = 'block';
+  setTimeout(() => t.style.display='none', 3000);
+}
+async function api(method, path, body) {
+  const opts = { method, headers: {'Content-Type':'application/json','Authorization':'Bearer '+tok} };
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(BASE + path, opts);
+  const d = await r.json().catch(() => ({error:'resposta invalida'}));
+  if (!r.ok) throw new Error(d.error || 'Erro '+r.status);
+  return d;
+}
+function cm(id) { document.getElementById(id).classList.remove('op'); }
+function om(id) { document.getElementById(id).classList.add('op'); }
+function nav(page, el) {
+  document.querySelectorAll('.pg').forEach(p => p.classList.remove('ac'));
+  document.querySelectorAll('.sb a').forEach(a => a.classList.remove('ac'));
+  document.getElementById('pg-'+page).classList.add('ac');
+  if(el) el.classList.add('ac');
+  if(page==='dash')  loadStats();
+  if(page==='users') loadU();
+  if(page==='apps')  loadA();
+  if(page==='feat')  loadF();
+  if(page==='inter') loadI();
+  if(page==='logs')  loadL();
+}
+
+if(tok) show();
+async function doLogin() {
+  try {
+    const d = await api('POST','/api/admin/login',{secret: document.getElementById('sec').value});
+    tok = d.token;
+    sessionStorage.setItem('cp_admin_tok', tok);
+    show();
+  } catch(e) { document.getElementById('lerr').textContent = e.message; }
+}
+function show() {
+  document.getElementById('lw').style.display='none';
+  document.getElementById('app').style.display='flex';
+  loadStats();
+}
+function doLogout() { tok=''; sessionStorage.removeItem('cp_admin_tok'); location.reload(); }
+
+async function loadStats() {
+  try {
+    const s = await api('GET','/api/admin/stats');
+    document.getElementById('sg').innerHTML = [
+      {v:s.users,l:'Usuarios'},{v:s.apps,l:'Apps'},{v:s.purchases,l:'Compras'},
+      {v:'R$ '+Number(s.revenue||0).toFixed(2),l:'Receita'},{v:s.logs,l:'Acoes Admin'}
+    ].map(c => '<div class="sc"><div class="v">'+c.v+'</div><div class="l">'+c.l+'</div></div>').join('');
+  } catch(e) { toast(e.message, false); }
+}
+
+async function loadU() {
+  const q = document.getElementById('uq').value;
+  try {
+    const us = await api('GET','/api/admin/users?q='+encodeURIComponent(q));
+    document.getElementById('utb').innerHTML = us.map(u =>
+      '<tr><td>'+u.id+'</td><td style="font-size:1.2rem">'+u.avatar+'</td><td><b>'+u.username+'</b></td><td style="color:#64748b">'+u.email+'</td><td>R$ '+Number(u.wallet||0).toFixed(2)+'</td><td>'+u.level+'</td><td>'+u.xp+'</td><td style="color:#64748b;font-size:.75rem">'+(u.created_at||'').slice(0,10)+'</td><td><button class="btn bsm bi" onclick="openEU('+u.id+','+u.wallet+','+u.level+','+u.xp+')">&#9998;</button><button class="btn bsm bd" onclick="delU('+u.id+',\''+u.username+'\')">&#10005;</button></td></tr>'
+    ).join('');
+  } catch(e) { toast(e.message, false); }
+}
+function openEU(id,w,l,x){ euid=id; document.getElementById('ew').value=w; document.getElementById('el').value=l; document.getElementById('ex').value=x; document.getElementById('eb').checked=false; om('meu'); }
+async function saveEU() {
+  try {
+    await api('PATCH','/api/admin/users/'+euid,{wallet:+document.getElementById('ew').value,level:+document.getElementById('el').value,xp:+document.getElementById('ex').value,banned:document.getElementById('eb').checked});
+    toast('Usuario atualizado'); cm('meu'); loadU();
+  } catch(e) { toast(e.message, false); }
+}
+async function delU(id,name) {
+  if(!confirm('Deletar '+name+'?')) return;
+  try { await api('DELETE','/api/admin/users/'+id); toast('Deletado'); loadU(); } catch(e) { toast(e.message,false); }
+}
+function openCU() { om('mcu'); }
+async function createU() {
+  try {
+    await api('POST','/api/admin/users',{username:document.getElementById('cun').value,email:document.getElementById('cue').value,password:document.getElementById('cup').value,wallet:+document.getElementById('cuw').value||1000});
+    toast('Usuario criado!'); cm('mcu'); loadU();
+  } catch(e) { toast(e.message, false); }
+}
+
+async function loadA() {
+  const q = document.getElementById('aq').value;
+  try {
+    const apps = await api('GET','/api/admin/apps?q='+encodeURIComponent(q));
+    document.getElementById('atb').innerHTML = apps.map(a =>
+      '<tr><td>'+a.id+'</td><td style="font-size:1.2rem">'+(a.emoji||'*')+'</td><td><b>'+a.name+'</b></td><td>'+(a.category||'')+'</td><td>R$ '+Number(a.price||0).toFixed(2)+'</td><td>'+(a.downloads||0)+'</td><td style="color:#a78bfa">'+(a.owner_name||'')+'</td><td style="color:#64748b;font-size:.75rem">'+(a.created_at||'').slice(0,10)+'</td><td><button class="btn bsm bd" onclick="delA('+a.id+',\''+a.name.replace(/\'/g,"\\'")+'\')">&#10005;</button></td></tr>'
+    ).join('');
+  } catch(e) { toast(e.message, false); }
+}
+async function delA(id,name) {
+  if(!confirm('Deletar app '+name+'?')) return;
+  try { await api('DELETE','/api/admin/apps/'+id); toast('App deletado'); loadA(); } catch(e) { toast(e.message,false); }
+}
+function openIA() { om('mia'); }
+async function injectA() {
+  try {
+    await api('POST','/api/admin/apps',{owner_id:+document.getElementById('iao').value,name:document.getElementById('ian').value,description:document.getElementById('iad').value,category:document.getElementById('iac').value||'Utilitario',price:+document.getElementById('iap').value||0,emoji:document.getElementById('iae').value||'*'});
+    toast('App injetado!'); cm('mia'); loadA();
+  } catch(e) { toast(e.message, false); }
+}
+
+async function loadF() {
+  try {
+    const fs = await api('GET','/api/admin/features');
+    const lbs = {missions:'Missoes',cloak:'Manto Invisivel',cloner:'Clonador',chat:'Chat Mundial',tracker:'Rastreador',hacker_lab:'Hacker Lab',simuladores:'Simuladores'};
+    document.getElementById('fl').innerHTML = fs.map(f =>
+      '<div class="tr"><div><b>'+(lbs[f.key]||f.key)+'</b><span style="color:#64748b;font-size:.8rem;margin-left:8px">'+f.key+'</span></div><label class="tg"><input type="checkbox" '+(f.enabled?'checked':'')+' onchange="toggleF(\''+f.key+'\',this.checked)"/><span class="ts"></span></label></div>'
+    ).join('');
+  } catch(e) { toast(e.message, false); }
+}
+async function toggleF(key, enabled) {
+  try { await api('PATCH','/api/admin/features/'+key,{enabled}); toast(key+' '+(enabled?'ativado':'desativado')); } catch(e) { toast(e.message,false); }
+}
+
+async function loadI() {
+  try {
+    const d = await api('GET','/api/admin/interactions');
+    document.getElementById('itb').innerHTML = d.purchases.map(p =>
+      '<tr><td>'+p.id+'</td><td><b>'+p.username+'</b></td><td>'+p.app_name+'</td><td>R$ '+Number(p.price_paid||0).toFixed(2)+'</td><td style="color:#64748b;font-size:.8rem">'+(p.purchased_at||'').slice(0,16)+'</td></tr>'
+    ).join('');
+  } catch(e) { toast(e.message, false); }
+}
+
+async function loadL() {
+  try {
+    const logs = await api('GET','/api/admin/logs');
+    const ic = {create_user:'&#43;',edit_user:'&#9998;',delete_user:'&#10005;',inject_app:'&#128241;',delete_app:'&#10005;',toggle_feature:'&#9881;'};
+    document.getElementById('ll').innerHTML = logs.map(l =>
+      '<div class="li"><span>'+(ic[l.action]||'&#128203;')+'</span><span class="ac2">'+l.action+'</span><span>'+(l.target||'')+'</span><span style="flex:1;color:#94a3b8">'+(l.detail||'')+'</span><span class="tm">'+(l.created_at||'').slice(0,16)+'</span></div>'
+    ).join('') || '<p style="color:#64748b;padding:16px">Nenhum log ainda.</p>';
+  } catch(e) { toast(e.message, false); }
+}
+</script>
+</body>
+</html>
