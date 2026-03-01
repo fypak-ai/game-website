@@ -48,9 +48,16 @@ const State = {
       { id: 'seed_6', name: 'TaskMaster', desc: 'Gerenciador de tarefas fictício com IA integrada e sincronização em nuvem imaginária.', price: 4.90, category: 'Produtividade', code: 'function main() {\n  const tarefas = ["Comprar leite", "Estudar JS", "Dormir cedo"];\n  return "Tarefas pendentes: " + tarefas.length;\n}', logo: { emoji: "⚡", color: "#dc2626" }, createdAt: Date.now() - 3600000 },
       { id: 'seed_7', name: 'PixelArt Pro', desc: 'Editor de pixel art fictício com paleta de 16M de cores e exportação em NFT imaginário.', price: 39.90, category: 'Utilitário', code: 'function main() {\n  const canvas = Array(8).fill(null).map(() => Array(8).fill("⬛"));\n  canvas[3][3] = "🟥"; canvas[3][4] = "🟥";\n  return canvas.map(r => r.join("")).join("\\n");\n}', logo: { emoji: "🎨", color: "#0891b2" }, createdAt: Date.now() - 7200000 },
       { id: 'seed_8', name: 'ChatBot AI', desc: 'IA conversacional fictícia que responde perguntas sobre o universo imaginário do CodePlay.', price: 49.90, category: 'Utilitário', code: 'function main() {\n  const respostas = ["Olá! Sou uma IA fictícia.", "Posso ajudar com tudo que não existe!", "Meu conhecimento vai até 2099."];\n  return respostas[Math.floor(Math.random()*respostas.length)];\n}', logo: { emoji: "🤖", color: "#7c3aed" }, createdAt: Date.now() - 10800000 },
+      { id: 'seed_cloak', name: 'Manto Invisível',
+        desc: 'Ativa um escudo de anonimato por 10 minutos — seus apps ficam ocultos no Rastreador de Credenciais. Para renovar, execute novamente.',
+        price: 1000, category: 'Segurança',
+        code: '// App especial — ativa cloaking no rastreador por 10 minutos',
+        logo: { emoji: '🔒', color: '#ef4444' },
+        cloakAction: true,
+        createdAt: Date.now() - 86400000 * 7 },
     ];
     State.setApps(seed);
-    localStorage.setItem(this.SEEDED_KEY, '3'); // v3: tracker price 520
+    localStorage.setItem(this.SEEDED_KEY, '4'); // v4: cloak app + R$1000 create cost
   }
 };
 
@@ -149,6 +156,18 @@ const AppStore = {
     const category = document.getElementById('appCategory').value;
     const code = document.getElementById('appCode').value.trim();
     if (!name || !desc || !code) return;
+    // ── Custo de publicação: R$1.000 ──
+    const CREATE_COST = 1000;
+    if (State.getWallet() < CREATE_COST) {
+      const result = document.getElementById('createResult');
+      if (result) {
+        result.textContent = '❌ Saldo insuficiente! Publicar um app custa R$ 1.000,00.';
+        result.className = 'result-msg error';
+        result.classList.remove('hidden');
+      }
+      return;
+    }
+    State.deductBalance(CREATE_COST);
     const logo = LogoGen.generate(name, code);
     const app = { id: 'app_' + Date.now(), name, desc, price, category, code, logo, createdAt: Date.now() };
     const apps = State.getApps();
@@ -156,7 +175,7 @@ const AppStore = {
     State.setApps(apps);
     const result = document.getElementById('createResult');
     if (result) {
-      result.textContent = '✅ App "' + name + '" publicado na loja!';
+      result.textContent = '✅ App "' + name + '" publicado! R$ 1.000,00 descontados da carteira.';
       result.className = 'result-msg success';
       result.classList.remove('hidden');
     }
@@ -181,6 +200,29 @@ const AppStore = {
         frameEl.src = app.launchUrl;
         frameEl.classList.remove('hidden');
         frameEl.style.cssText = 'width:100%;height:70vh;border:none;border-radius:12px;margin-top:.75rem;';
+      }
+      return;
+    }
+    // ── Cloak Action apps ──
+    if (app.cloakAction) {
+      const currentUser = (() => { try { return JSON.parse(localStorage.getItem('cp_currentUser') || 'null'); } catch { return null; } })();
+      if (!currentUser) { alert('Faça login para usar o Manto Invisível.'); return; }
+      const cloak = { until: Date.now() + 10 * 60 * 1000, appName: app.name };
+      localStorage.setItem('cp_cloak_' + currentUser.username.toLowerCase(), JSON.stringify(cloak));
+      // Show activation confirmation in app modal output
+      const output = document.getElementById('appOutput');
+      const frameEl = document.getElementById('appFrame');
+      if (frameEl) frameEl.classList.add('hidden');
+      if (output) {
+        output.classList.remove('hidden');
+        const until = new Date(cloak.until).toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
+        output.innerHTML = `<div style="padding:1.5rem;text-align:center;line-height:2">
+          <div style="font-size:3rem">🔒</div>
+          <div style="font-size:1.1rem;font-weight:700;color:#ef4444;margin:.5rem 0">MANTO INVISÍVEL ATIVADO</div>
+          <div style="color:#aaa;font-size:.85rem">Seus apps estão ocultos no Rastreador de Credenciais.</div>
+          <div style="color:#aaa;font-size:.85rem;margin-top:.5rem">Expira às <strong style="color:#fff">${until}</strong> (10 minutos)</div>
+          <div style="color:#555;font-size:.75rem;margin-top:1rem">Execute novamente para renovar o tempo.</div>
+        </div>`;
       }
       return;
     }
