@@ -1,4 +1,4 @@
-// ── CodePlay Credential Tracker ────────────────────────────
+// ── CodePlay Credential Tracker ────────────────────────────────────────────────────────────────────────────────────────────────────────────
 // Fictional hacker-style credential lookup for registered users
 
 // ── Fictional credential generator (deterministic by username) ──
@@ -26,7 +26,7 @@ const FakeGen = {
   }
 };
 
-// ── 3 sample / seed users ───────────────────────────────────
+// ── 10 NPC / seed users (must match FAKE_USERS in chat.js) ─────────────────
 const SEED_USERS = [
   {
     id: 'u_sample_1',
@@ -34,9 +34,7 @@ const SEED_USERS = [
     email: 'bytewolf@codeplay.fake',
     passwordHash: '######',
     avatar: '🐺',
-    wallet: 4200,
-    xp: 1850,
-    level: 4,
+    wallet: 4200, xp: 1850, level: 4,
     created_at: new Date(Date.now() - 86400000 * 7).toISOString(),
     fakeUsername: FakeGen.username('ByteWolf_99'),
     fakePassword: FakeGen.password('ByteWolf_99'),
@@ -50,18 +48,16 @@ const SEED_USERS = [
   {
     id: 'u_sample_2',
     username: 'N3onViper',
-    email: 'n3onviper@codeplay.fake',
+    email: 'neonviper@codeplay.fake',
     passwordHash: '######',
     avatar: '🐍',
-    wallet: 2700,
-    xp: 950,
-    level: 2,
+    wallet: 1800, xp: 720, level: 2,
     created_at: new Date(Date.now() - 86400000 * 3).toISOString(),
     fakeUsername: FakeGen.username('N3onViper'),
     fakePassword: FakeGen.password('N3onViper'),
     apps: [
-      { name: 'ViperNet',  logo: { emoji: '🌐', color: '#059669' }, category: 'Rede' },
-      { name: 'NeonChat',  logo: { emoji: '💬', color: '#d97706' }, category: 'Social' },
+      { name: 'ViperScan', logo: { emoji: '🐍', color: '#16a34a' }, category: 'Segurança' },
+      { name: 'NeonGrid',  logo: { emoji: '🟩', color: '#0d9488' }, category: 'Redes' },
     ],
     missions_done: 5,
   },
@@ -71,25 +67,137 @@ const SEED_USERS = [
     email: 'ghostpixel@codeplay.fake',
     passwordHash: '######',
     avatar: '👻',
-    wallet: 8900,
-    xp: 3400,
-    level: 7,
+    wallet: 9100, xp: 4400, level: 7,
     created_at: new Date(Date.now() - 86400000 * 14).toISOString(),
     fakeUsername: FakeGen.username('GhostPixel'),
     fakePassword: FakeGen.password('GhostPixel'),
     apps: [
-      { name: 'PhantomOS',   logo: { emoji: '👻', color: '#9333ea' }, category: 'Sistema' },
-      { name: 'PixelVault',  logo: { emoji: '🎨', color: '#0891b2' }, category: 'Mídia' },
-      { name: 'GhostChat',   logo: { emoji: '💀', color: '#1f2937' }, category: 'Social' },
-      { name: 'ShadowDB',    logo: { emoji: '🗄️', color: '#7c3aed' }, category: 'Banco de Dados' },
+      { name: 'GhostEdit',  logo: { emoji: '👻', color: '#6366f1' }, category: 'Mídia' },
+      { name: 'GhostChat',  logo: { emoji: '💀', color: '#1f2937' }, category: 'Social' },
+      { name: 'ShadowDB',   logo: { emoji: '🗄️', color: '#7c3aed' }, category: 'Banco de Dados' },
+      { name: 'PixelForge', logo: { emoji: '🎨', color: '#0891b2' }, category: 'Criativo' },
     ],
     missions_done: 27,
+  },
+  {
+    id: 'u_sample_4',
+    username: 'DataPhantom',
+    email: 'dataphantom@codeplay.fake',
+    passwordHash: '######',
+    avatar: '🕵️',
+    wallet: 6600, xp: 3100, level: 6,
+    created_at: new Date(Date.now() - 86400000 * 10).toISOString(),
+    fakeUsername: FakeGen.username('DataPhantom'),
+    fakePassword: FakeGen.password('DataPhantom'),
+    apps: [
+      { name: 'PhantomOS',   logo: { emoji: '🕵️', color: '#374151' }, category: 'Sistema' },
+      { name: 'DataBender',  logo: { emoji: '💾', color: '#b45309' }, category: 'IA' },
+      { name: 'CryptoVault', logo: { emoji: '🔒', color: '#7c3aed' }, category: 'Segurança' },
+    ],
+    missions_done: 19,
+  },
+  {
+    id: 'u_sample_5',
+    username: 'CipherX',
+    email: 'cipherx@codeplay.fake',
+    passwordHash: '######',
+    avatar: '🔐',
+    wallet: 3300, xp: 1200, level: 3,
+    created_at: new Date(Date.now() - 86400000 * 5).toISOString(),
+    fakeUsername: FakeGen.username('CipherX'),
+    fakePassword: FakeGen.password('CipherX'),
+    apps: [
+      { name: 'CryptoVault', logo: { emoji: '🔒', color: '#7c3aed' }, category: 'Segurança' },
+      { name: 'NetSpy',      logo: { emoji: '🕸️', color: '#1e3a5f' }, category: 'Redes' },
+    ],
+    missions_done: 8,
+  },
+  {
+    id: 'u_sample_6',
+    username: 'NullByte_7',
+    email: 'nullbyte7@codeplay.fake',
+    passwordHash: '######',
+    avatar: '⛔',
+    wallet: 2100, xp: 950, level: 2,
+    created_at: new Date(Date.now() - 86400000 * 4).toISOString(),
+    fakeUsername: FakeGen.username('NullByte_7'),
+    fakePassword: FakeGen.password('NullByte_7'),
+    apps: [
+      { name: 'BotMaster', logo: { emoji: '🤖', color: '#374151' }, category: 'Automação' },
+      { name: 'ZeroShell', logo: { emoji: '⛔', color: '#dc2626' }, category: 'Sistema' },
+    ],
+    missions_done: 6,
+  },
+  {
+    id: 'u_sample_7',
+    username: 'QuantumDev',
+    email: 'quantumdev@codeplay.fake',
+    passwordHash: '######',
+    avatar: '⚛️',
+    wallet: 7800, xp: 3800, level: 7,
+    created_at: new Date(Date.now() - 86400000 * 20).toISOString(),
+    fakeUsername: FakeGen.username('QuantumDev'),
+    fakePassword: FakeGen.password('QuantumDev'),
+    apps: [
+      { name: 'GridBreaker', logo: { emoji: '⚛️', color: '#0d9488' }, category: 'Científico' },
+      { name: 'CloudRider',  logo: { emoji: '☁️', color: '#2563eb' }, category: 'Nuvem' },
+      { name: 'NeoLauncher', logo: { emoji: '🚀', color: '#7c3aed' }, category: 'Utilitário' },
+    ],
+    missions_done: 22,
+  },
+  {
+    id: 'u_sample_8',
+    username: 'PixelHunter',
+    email: 'pixelhunter@codeplay.fake',
+    passwordHash: '######',
+    avatar: '🎯',
+    wallet: 4500, xp: 2000, level: 4,
+    created_at: new Date(Date.now() - 86400000 * 8).toISOString(),
+    fakeUsername: FakeGen.username('PixelHunter'),
+    fakePassword: FakeGen.password('PixelHunter'),
+    apps: [
+      { name: 'MegaCalc Pro', logo: { emoji: '🧮', color: '#f59e0b' }, category: 'Utilitário' },
+      { name: 'PixelForge',   logo: { emoji: '🎨', color: '#0891b2' }, category: 'Criativo' },
+    ],
+    missions_done: 14,
+  },
+  {
+    id: 'u_sample_9',
+    username: 'DarkCode',
+    email: 'darkcode@codeplay.fake',
+    passwordHash: '######',
+    avatar: '🌑',
+    wallet: 5200, xp: 2500, level: 5,
+    created_at: new Date(Date.now() - 86400000 * 12).toISOString(),
+    fakeUsername: FakeGen.username('DarkCode'),
+    fakePassword: FakeGen.password('DarkCode'),
+    apps: [
+      { name: 'ShadowCrawler', logo: { emoji: '🌑', color: '#111827' }, category: 'Segurança' },
+      { name: 'DataBender',    logo: { emoji: '💾', color: '#b45309' }, category: 'IA' },
+      { name: 'NetSpy',        logo: { emoji: '🕸️', color: '#1e3a5f' }, category: 'Redes' },
+    ],
+    missions_done: 17,
+  },
+  {
+    id: 'u_sample_10',
+    username: 'SyntaxError',
+    email: 'syntaxerror@codeplay.fake',
+    passwordHash: '######',
+    avatar: '💥',
+    wallet: 1500, xp: 600, level: 1,
+    created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
+    fakeUsername: FakeGen.username('SyntaxError'),
+    fakePassword: FakeGen.password('SyntaxError'),
+    apps: [
+      { name: 'BruteShield', logo: { emoji: '🛡️', color: '#dc2626' }, category: 'Segurança' },
+    ],
+    missions_done: 2,
   },
 ];
 
 function seedSampleUsers() {
   const KEY = 'cp_registered_users';
-  const KEY_SEEDED = 'cp_tracker_seeded';
+  const KEY_SEEDED = 'cp_tracker_seeded_v2';
   if (localStorage.getItem(KEY_SEEDED)) return;
   try {
     const existing = JSON.parse(localStorage.getItem(KEY) || '[]');
@@ -214,7 +322,7 @@ const Tracker = {
             <span class="result-level">Nível ${level}</span>
             <span class="result-since">Desde ${sinceDate}</span>
           </div>
-          <div class="result-status status--online">● ONLINE</div>
+          <div class="result-status status--online">⚡ ONLINE</div>
         </div>
 
         <div class="result-stats">
