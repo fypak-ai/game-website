@@ -291,6 +291,7 @@ function renderAccepted() {
           ? `<button class="btn btn--sm btn--primary" onclick="Chat.complete('${m.instanceId}')">✅ Confirmar</button>`
           : `<span class="verify-hint">🔴 ${getVerifyLabel(m.verifyType)}</span>`
         }
+        <button class="btn btn--sm btn--danger-outline" onclick="Chat.reject('${m.instanceId}')" title="Rejeitar missão">✖ Rejeitar</button>
       </div>
     </div>`;
   }).join('');
@@ -321,11 +322,17 @@ function updateSidebarTimer() {
 const Chat = {
   accept(instanceId) {
     const s = CS.s;
+    s.accepted = s.accepted || [];
+    // ── Limite de 3 missões aceitas ──
+    const activeCount = s.accepted.filter(m => m.status === 'accepted' || m.status === 'in_progress').length;
+    if (activeCount >= 3) {
+      addMessage({ kind:'system', icon:'⚠️', text:'Você já tem 3 missões ativas. Conclua ou rejeite uma antes de aceitar outra.', ts: Date.now() });
+      return;
+    }
     const idx = (s.currentMissions||[]).findIndex(m => m.instanceId === instanceId);
     if (idx === -1) return;
     const m = s.currentMissions[idx];
     m.status = 'accepted';
-    s.accepted = s.accepted || [];
     // avoid duplicates
     if (!s.accepted.find(a => a.instanceId === instanceId)) {
       s.accepted.push({ ...m, status:'accepted' });
@@ -335,6 +342,13 @@ const Chat = {
 
     const p = CS.getPlayer();
     addMessage({ kind:'system', icon: m.icon, text:`${p.username||'Você'} aceitou a missão: "${m.title}". Boa sorte! ⚡`, ts: Date.now() });
+    renderSidebar();
+  },
+
+  reject(instanceId) {
+    const s = CS.s;
+    s.accepted = (s.accepted || []).filter(m => m.instanceId !== instanceId);
+    CS.save(s);
     renderSidebar();
   },
 
