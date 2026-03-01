@@ -191,82 +191,297 @@ const AppStore = {
 
     const code = app.code || '';
 
-    // ── Detect Java / other compiled languages ──
+        // ── Detect Java / Python / C++ compiled languages ──
     const trimmed = code.trim();
-    const isJava = /import\s+javax?\./.test(code) || /public\s+class\s+\w+/.test(code) || /System\.out\.print/.test(code);
+    const isJava   = /import\s+javax?\./.test(code) || /public\s+class\s+\w+/.test(code) || /System\.out\.print/.test(code);
     const isPython = /^\s*def |^\s*import |^\s*from .+ import/m.test(code) && !/^\s*(const|let|var|function)/.test(code);
-    const isCpp = /#include\s*</.test(code) && /int\s+main\s*\(/.test(code);
+    const isCpp    = /#include\s*</.test(code) && /int\s+main\s*\(/.test(code);
 
     if (isJava || isPython || isCpp) {
       const lang = isJava ? 'Java' : isPython ? 'Python' : 'C++';
-      // Extract class name / main identifier for flavor text
       const classMatch = code.match(/public\s+class\s+(\w+)/) || code.match(/class\s+(\w+)/);
-      const className  = classMatch ? classMatch[1] : app.name;
-      // Generate a thematic fictitious output based on code content
+      const className  = classMatch ? classMatch[1] : (app.name || 'Programa');
       const lc = code.toLowerCase();
-      let fakeOutput = '';
-      if (/jframe|swing|awt|window|panel/.test(lc)) {
-        fakeOutput = [
-          `[${lang} Runtime] Compilando ${className}.java...`,
-          `[javac] Build concluído — 0 erros, 0 avisos`,
-          `[JVM] Iniciando Java Virtual Machine v21.0.2`,
-          `[Swing] Carregando Look & Feel do sistema...`,
-          `[GUI] Janela "${className}" criada (640×480)`,
-          `[Render] FPS: 58.3 | Frames renderizados: 174`,
-          `[Thread-0] Loop principal ativo`,
-          `[Heap] Memória usada: 42 MB / 256 MB`,
-          `[GUI] Evento: windowOpened → listeners notificados`,
-          `✅ Aplicação em execução — interface gráfica exibida`
-        ].join('\n');
-      } else if (/video|frame|image|bufferedimage|pixel/.test(lc)) {
-        fakeOutput = [
-          `[${lang} Runtime] Compilando ${className}...`,
-          `[Build] Sucesso — nenhum erro encontrado`,
-          `[Media] Inicializando pipeline de vídeo...`,
-          `[Codec] Resolução: 640×480 @ 10 FPS`,
-          `[Frame 1/∞] Gerando frame aleatório (307.200 pixels)`,
-          `[Frame 2/∞] RGB médio: (127, 134, 121)`,
-          `[Frame 3/∞] Processamento: 8.3ms`,
-          `[Render] Buffer duplo ativo — sem tearing`,
-          `[Memória] Heap: 68 MB / 512 MB`,
-          `✅ Stream de vídeo em execução contínua`
-        ].join('\n');
-      } else if (/socket|http|url|network|connect/.test(lc)) {
-        fakeOutput = [
-          `[${lang} Runtime] Compilando ${className}...`,
-          `[Build] OK`,
-          `[Net] Conectando a 192.168.1.1:8080...`,
-          `[Net] Handshake completo — latência: 12ms`,
-          `[RX] 1.024 bytes recebidos`,
-          `[TX] Pacote enviado (256 bytes)`,
-          `✅ Conexão estabelecida e estável`
-        ].join('\n');
-      } else if (/random|math|sort|array|list/.test(lc)) {
-        fakeOutput = [
-          `[${lang} Runtime] Compilando ${className}...`,
-          `[Build] OK — 1 classe gerada`,
-          `[Run] Executando lógica principal...`,
-          `[Math] Gerados 1.000 valores aleatórios`,
-          `[Sort] Array ordenado em 0.003ms`,
-          `[Result] Máx: 998 | Mín: 2 | Média: 501.3`,
-          `✅ Execução concluída`
-        ].join('\n');
-      } else {
-        fakeOutput = [
-          `[${lang} Runtime] Compilando ${className}...`,
-          `[Build] Sucesso — 0 erros`,
-          `[JVM] Iniciando execução...`,
-          `[Log] Programa iniciado`,
-          `[Log] Processamento concluído`,
-          `[Exit] Código de saída: 0`,
-          `✅ Execução finalizada com sucesso`
-        ].join('\n');
+
+      // ── Smart UI: detect functional pattern and render real interactive app ──
+      let interactiveHtml = null;
+
+      // ── CALCULADORA ── (Scanner + switch on operacao + soma/subtração/multiplicação/divisão)
+      if (/scanner|nextint|nextdouble/.test(lc) && /soma|subtra|multipl|divis|calculad|operacao|switch/.test(lc)) {
+        interactiveHtml = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0d1117; color: #c9d1d9; font-family: 'Segoe UI', sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1rem; }
+  .calc { background: #161b22; border: 1px solid #30363d; border-radius: 14px; padding: 1.5rem; width: 320px; }
+  h2 { color: #f0883e; font-size: 1rem; text-align: center; margin-bottom: 1.25rem; letter-spacing: 1px; }
+  .row { display: flex; gap: .5rem; margin-bottom: .75rem; }
+  input[type=number] { flex: 1; background: #0d1117; border: 1px solid #30363d; color: #c9d1d9; border-radius: 8px; padding: .5rem .75rem; font-size: 1rem; width: 100%; outline: none; }
+  input[type=number]:focus { border-color: #f0883e; }
+  .ops { display: grid; grid-template-columns: repeat(4,1fr); gap: .4rem; margin-bottom: 1rem; }
+  .op { background: #21262d; border: 1px solid #30363d; color: #c9d1d9; border-radius: 8px; padding: .5rem; font-size: 1.1rem; cursor: pointer; transition: background .15s; }
+  .op:hover, .op.active { background: #f0883e; color: #0d1117; border-color: #f0883e; }
+  .result { background: #0d1117; border-radius: 8px; padding: .75rem 1rem; font-size: 1.4rem; text-align: center; color: #4ade80; min-height: 2.5rem; border: 1px solid #30363d; word-break: break-all; }
+  .error { color: #f85149; font-size: .85rem; }
+  .log { margin-top: .75rem; background: #0d1117; border-radius: 6px; padding: .5rem .75rem; font-size: .72rem; color: #8b949e; max-height: 80px; overflow-y: auto; font-family: monospace; }
+</style></head><body>
+<div class="calc">
+  <h2>☕ ${className}</h2>
+  <div class="row">
+    <input type="number" id="n1" placeholder="Número 1" step="any" />
+    <input type="number" id="n2" placeholder="Número 2" step="any" />
+  </div>
+  <div class="ops">
+    <button class="op active" data-op="+" onclick="setOp(this)">+</button>
+    <button class="op" data-op="-" onclick="setOp(this)">−</button>
+    <button class="op" data-op="*" onclick="setOp(this)">×</button>
+    <button class="op" data-op="/" onclick="setOp(this)">÷</button>
+  </div>
+  <div class="result" id="res">—</div>
+  <div class="log" id="log">[JVM] ${className} iniciado ✓</div>
+</div>
+<script>
+  let op = '+';
+  const opNames = { '+': 'Soma', '-': 'Subtração', '*': 'Multiplicação', '/': 'Divisão' };
+  function setOp(btn) {
+    document.querySelectorAll('.op').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    op = btn.dataset.op;
+    calc();
+  }
+  function addLog(msg) {
+    const l = document.getElementById('log');
+    l.innerHTML += '<br>' + msg;
+    l.scrollTop = l.scrollHeight;
+  }
+  function calc() {
+    const n1 = parseFloat(document.getElementById('n1').value);
+    const n2 = parseFloat(document.getElementById('n2').value);
+    const res = document.getElementById('res');
+    if (isNaN(n1) || isNaN(n2)) { res.innerHTML = '—'; return; }
+    let r;
+    if (op === '+') r = n1 + n2;
+    else if (op === '-') r = n1 - n2;
+    else if (op === '*') r = n1 * n2;
+    else if (op === '/') {
+      if (n2 === 0) { res.innerHTML = '<span class="error">Erro: Divisão por zero!</span>'; addLog('[ERR] ArithmeticException: / by zero'); return; }
+      r = n1 / n2;
+    }
+    const disp = Number.isInteger(r) ? r : parseFloat(r.toFixed(8));
+    res.textContent = 'Resultado da ' + opNames[op].toLowerCase() + ': ' + disp;
+    addLog('[Log] ' + n1 + ' ' + op + ' ' + n2 + ' = ' + disp);
+  }
+  document.querySelectorAll('input').forEach(i => i.addEventListener('input', calc));
+</script></body></html>`;
       }
-      output.textContent = fakeOutput;
-      output.classList.remove('hidden');
-      if (frameEl) frameEl.classList.add('hidden');
+
+      // ── QUIZ / PERGUNTAS ──
+      else if (/quiz|pergunta|resposta|alternativa|questao|question|answer/.test(lc)) {
+        const questions = [
+          { q: 'Qual a capital do Brasil?', opts: ['São Paulo','Rio de Janeiro','Brasília','Salvador'], a: 2 },
+          { q: 'Quanto é 7 × 8?', opts: ['54','56','58','64'], a: 1 },
+          { q: 'Qual linguagem roda na JVM?', opts: ['Python','C++','Java','Ruby'], a: 2 },
+          { q: 'Quanto é √144?', opts: ['11','12','13','14'], a: 1 },
+        ];
+        interactiveHtml = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<style>
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:#0d1117; color:#c9d1d9; font-family:'Segoe UI',sans-serif; display:flex; align-items:center; justify-content:center; min-height:100vh; padding:1rem; }
+  .quiz { background:#161b22; border:1px solid #30363d; border-radius:14px; padding:1.5rem; width:340px; }
+  h2 { color:#58a6ff; font-size:1rem; text-align:center; margin-bottom:1rem; }
+  .q { font-size:1rem; margin-bottom:1rem; color:#e6edf3; line-height:1.5; }
+  .opts { display:flex; flex-direction:column; gap:.5rem; }
+  .opt { background:#21262d; border:1px solid #30363d; color:#c9d1d9; border-radius:8px; padding:.6rem 1rem; cursor:pointer; text-align:left; transition:background .15s; }
+  .opt:hover { background:#30363d; }
+  .opt.correct { background:#1a4731; border-color:#238636; color:#3fb950; }
+  .opt.wrong { background:#3d1c1c; border-color:#f85149; color:#f85149; }
+  .score { text-align:center; color:#4ade80; font-size:1.2rem; margin-top:1rem; }
+  .progress { font-size:.75rem; color:#8b949e; text-align:right; margin-bottom:.5rem; }
+</style></head><body>
+<div class="quiz">
+  <h2>🎮 ${className}</h2>
+  <div class="progress" id="prog">1 / ${questions.length}</div>
+  <div class="q" id="qtext"></div>
+  <div class="opts" id="opts"></div>
+  <div class="score hidden" id="score"></div>
+</div>
+<script>
+  const qs = ${JSON.stringify(questions)};
+  let cur = 0, score = 0;
+  function render() {
+    if (cur >= qs.length) {
+      document.getElementById('qtext').style.display='none';
+      document.getElementById('opts').style.display='none';
+      document.getElementById('prog').style.display='none';
+      const s = document.getElementById('score');
+      s.classList.remove('hidden');
+      s.textContent = '✅ Fim! Acertos: ' + score + '/' + qs.length;
       return;
     }
+    document.getElementById('prog').textContent = (cur+1) + ' / ' + qs.length;
+    document.getElementById('qtext').textContent = qs[cur].q;
+    document.getElementById('opts').innerHTML = qs[cur].opts.map((o,i) =>
+      '<button class="opt" onclick="pick('+i+')">'+o+'</button>').join('');
+  }
+  function pick(i) {
+    const btns = document.querySelectorAll('.opt');
+    btns.forEach(b=>b.disabled=true);
+    btns[qs[cur].a].classList.add('correct');
+    if (i !== qs[cur].a) btns[i].classList.add('wrong'); else score++;
+    setTimeout(() => { cur++; render(); }, 900);
+  }
+  render();
+</script></body></html>`;
+      }
+
+      // ── LISTA / TODO ──
+      else if (/list|arraylist|linkedlist|tarefa|todo|task|item|add|remove/.test(lc) && !/random|sort/.test(lc)) {
+        interactiveHtml = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<style>
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:#0d1117; color:#c9d1d9; font-family:'Segoe UI',sans-serif; display:flex; align-items:center; justify-content:center; min-height:100vh; padding:1rem; }
+  .app { background:#161b22; border:1px solid #30363d; border-radius:14px; padding:1.5rem; width:320px; }
+  h2 { color:#3fb950; font-size:1rem; margin-bottom:1rem; }
+  .row { display:flex; gap:.5rem; margin-bottom:1rem; }
+  input { flex:1; background:#0d1117; border:1px solid #30363d; color:#c9d1d9; border-radius:8px; padding:.5rem .75rem; font-size:.9rem; outline:none; }
+  input:focus { border-color:#3fb950; }
+  button { background:#238636; border:none; color:#fff; border-radius:8px; padding:.5rem .9rem; cursor:pointer; font-size:.85rem; }
+  button:hover { background:#2ea043; }
+  ul { list-style:none; display:flex; flex-direction:column; gap:.4rem; max-height:200px; overflow-y:auto; }
+  li { background:#21262d; border-radius:8px; padding:.5rem .75rem; display:flex; align-items:center; gap:.5rem; font-size:.9rem; }
+  li.done span { text-decoration:line-through; color:#8b949e; }
+  li input[type=checkbox] { accent-color:#3fb950; cursor:pointer; }
+  .del { background:#f85149; padding:.2rem .5rem; margin-left:auto; border-radius:6px; font-size:.75rem; }
+  .empty { color:#8b949e; font-size:.85rem; text-align:center; padding:1rem; }
+</style></head><body>
+<div class="app">
+  <h2>📋 ${className}</h2>
+  <div class="row">
+    <input id="inp" placeholder="Nova tarefa..." onkeydown="if(event.key==='Enter')add()" />
+    <button onclick="add()">+ Add</button>
+  </div>
+  <ul id="list"><li class="empty">Nenhuma tarefa ainda.</li></ul>
+</div>
+<script>
+  let items = [];
+  function render() {
+    const ul = document.getElementById('list');
+    if (!items.length) { ul.innerHTML = '<li class="empty">Nenhuma tarefa ainda.</li>'; return; }
+    ul.innerHTML = items.map((t,i) => '<li class="'+(t.done?'done':'')+'"><input type="checkbox" '+(t.done?'checked':'')+" onchange='toggle("+i+")'>"+
+      '<span>'+t.text+'</span><button class="del" onclick="del('+i+')">✕</button></li>').join('');
+  }
+  function add() {
+    const v = document.getElementById('inp').value.trim();
+    if (!v) return;
+    items.push({ text: v, done: false });
+    document.getElementById('inp').value = '';
+    render();
+  }
+  function toggle(i) { items[i].done = !items[i].done; render(); }
+  function del(i) { items.splice(i,1); render(); }
+</script></body></html>`;
+      }
+
+      // ── JOGO / GAME ──
+      else if (/jogo|game|score|pontuacao|player|nivel|level|placar/.test(lc)) {
+        interactiveHtml = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<style>
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:#0d1117; color:#c9d1d9; font-family:'Segoe UI',sans-serif; display:flex; align-items:center; justify-content:center; min-height:100vh; }
+  .game { background:#161b22; border:1px solid #30363d; border-radius:14px; padding:1.5rem; width:320px; text-align:center; }
+  h2 { color:#f0883e; margin-bottom:1rem; font-size:1rem; }
+  .score { font-size:2.5rem; font-weight:700; color:#4ade80; margin:.5rem 0; }
+  .level { color:#8b949e; font-size:.85rem; margin-bottom:1rem; }
+  .target { font-size:4rem; cursor:pointer; display:inline-block; transition:transform .1s; user-select:none; margin:1rem 0; }
+  .target:active { transform:scale(.85); }
+  .btn { background:#238636; border:none; color:#fff; border-radius:8px; padding:.6rem 1.4rem; cursor:pointer; font-size:.9rem; margin-top:.75rem; }
+  .miss { color:#f85149; font-size:.8rem; margin-top:.25rem; }
+  .timer { font-size:.85rem; color:#8b949e; margin-top:.5rem; }
+</style></head><body>
+<div class="game">
+  <h2>🎮 ${className}</h2>
+  <div class="score" id="sc">0</div>
+  <div class="level" id="lvl">Nível 1</div>
+  <div class="target" id="tgt" onclick="hit()">🎯</div>
+  <div class="miss" id="miss"></div>
+  <div class="timer" id="tmr">⏱ 30s</div>
+  <button class="btn" id="btn" onclick="start()">▶ Iniciar</button>
+</div>
+<script>
+  let score=0, misses=0, running=false, timeLeft=30, interval, targets=['🎯','⭐','💎','🔥','⚡','🚀'];
+  function start() {
+    score=0; misses=0; timeLeft=30; running=true;
+    document.getElementById('sc').textContent=0;
+    document.getElementById('miss').textContent='';
+    document.getElementById('btn').style.display='none';
+    moveTgt();
+    interval = setInterval(() => {
+      timeLeft--;
+      document.getElementById('tmr').textContent='⏱ '+timeLeft+'s';
+      document.getElementById('lvl').textContent='Nível '+Math.floor(score/5+1);
+      if (timeLeft<=0) { clearInterval(interval); running=false; end(); }
+    }, 1000);
+  }
+  function moveTgt() {
+    const t=document.getElementById('tgt');
+    t.textContent=targets[Math.floor(Math.random()*targets.length)];
+  }
+  function hit() {
+    if (!running) return;
+    score++;
+    document.getElementById('sc').textContent=score;
+    moveTgt();
+  }
+  function end() {
+    document.getElementById('tgt').textContent='🏆';
+    document.getElementById('miss').textContent='Fim! Pontuação: '+score;
+    document.getElementById('btn').style.display='';
+    document.getElementById('btn').textContent='↺ Jogar de novo';
+  }
+</script></body></html>`;
+      }
+
+      // If we have an interactive UI, render it in iframe
+      if (interactiveHtml) {
+        const blob = new Blob([interactiveHtml], { type: 'text/html' });
+        const url  = URL.createObjectURL(blob);
+        if (output)  output.classList.add('hidden');
+        if (frameEl) {
+          frameEl.src = url;
+          frameEl.classList.remove('hidden');
+          frameEl.style.cssText = 'width:100%;height:420px;border:none;border-radius:12px;margin-top:.75rem;';
+        }
+        return;
+      }
+
+      // ── Fallback: typed fictitious terminal output ──
+      let fakeLines = [];
+      if (/jframe|swing|awt|window|panel/.test(lc)) {
+        fakeLines = [`[${lang}] Compilando ${className}...`, `[javac] 0 erros`, `[JVM] JVM v21.0.2 iniciada`, `[Swing] Look & Feel carregado`, `[GUI] Janela criada (640×480)`, `✅ Interface gráfica em execução`];
+      } else if (/video|frame|image|bufferedimage|pixel/.test(lc)) {
+        fakeLines = [`[${lang}] Compilando ${className}...`, `[Build] OK`, `[Media] Pipeline de vídeo iniciado`, `[Codec] 640×480 @ 10FPS`, `[Frame 1] 307.200 pixels gerados`, `✅ Stream de vídeo em execução`];
+      } else if (/socket|http|url|connect/.test(lc)) {
+        fakeLines = [`[${lang}] Compilando ${className}...`, `[Net] Conectando 192.168.1.1:8080`, `[Net] Handshake OK — 12ms`, `[RX] 1.024 bytes`, `✅ Conexão ativa`];
+      } else if (/random|sort|array/.test(lc)) {
+        fakeLines = [`[${lang}] Compilando ${className}...`, `[Run] 1.000 valores gerados`, `[Sort] Ordenado em 0.003ms`, `[Result] Máx:998 Mín:2 Média:501.3`, `✅ Concluído`];
+      } else {
+        fakeLines = [`[${lang}] Compilando ${className}...`, `[Build] 0 erros`, `[Run] Iniciando...`, `[Log] Processamento concluído`, `[Exit] Código: 0`, `✅ Finalizado`];
+      }
+
+      // Animate lines one by one
+      output.textContent = '';
+      output.classList.remove('hidden');
+      if (frameEl) frameEl.classList.add('hidden');
+      let i = 0;
+      const tick = setInterval(() => {
+        if (i < fakeLines.length) {
+          output.textContent += (i > 0 ? '\n' : '') + fakeLines[i++];
+        } else {
+          clearInterval(tick);
+        }
+      }, 120);
+      return;
+    }
+
 
     // Detect non-JS content
     if (trimmed.startsWith('<') || /<\/(html|head|body|div|script)/i.test(trimmed)) {
