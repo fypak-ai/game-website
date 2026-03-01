@@ -75,15 +75,17 @@ const Dashboard = {
     if (empty) empty.classList.add('hidden');
     if (grid) grid.innerHTML = apps.map((a, i) => `
       <div class="dash-app-card dash-app-card--clickable" style="--ac:${(a.logo&&a.logo.color)||a.color||'#7c3aed'}" onclick="Dashboard.openApp('created', ${i})">
-        <div class="dash-app-card__logo">${(a.logo&&a.logo.emoji)||a.emoji||'✨'}</div>
-        <div class="dash-app-card__body">
-          <div class="dash-app-card__name">${a.name}</div>
-          <div class="dash-app-card__meta">
-            <span class="tag">${a.category || 'App'}</span>
-            <span class="tag">${a.price === 0 ? 'Grátis' : 'R$ ' + Number(a.price || 0).toFixed(2)}</span>
-            <span class="tag">⬇️ ${a.downloads || 0}</span>
+        <div class="dash-app-card__top">
+          <div class="dash-app-card__logo">${(a.logo&&a.logo.emoji)||a.emoji||'✨'}</div>
+          <div class="dash-app-card__body">
+            <div class="dash-app-card__name">${a.name}</div>
+            <div class="dash-app-card__meta">
+              <span class="tag">${a.category || 'App'}</span>
+              <span class="tag">${a.price === 0 ? 'Grátis' : 'R$ ' + Number(a.price || 0).toFixed(2)}</span>
+              <span class="tag">⬇️ ${a.downloads || 0}</span>
+            </div>
+            <p class="dash-app-card__desc">${a.description || ''}</p>
           </div>
-          <p class="dash-app-card__desc">${a.description || ''}</p>
         </div>
         <div class="dash-app-card__actions" onclick="event.stopPropagation()">
           <button class="btn btn--sm btn--primary" onclick="Dashboard.openApp('created', ${i})">▶ Executar</button>
@@ -136,15 +138,19 @@ const Dashboard = {
     if (empty) empty.classList.add('hidden');
     if (grid) grid.innerHTML = purchased.map(a => `
       <div class="dash-app-card dash-app-card--clickable" style="--ac:${(a.logo&&a.logo.color)||a.color||'#22c55e'}" onclick="Dashboard.openApp('purchased', ${purchased.indexOf(a)})">
-        <div class="dash-app-card__logo">${(a.logo&&a.logo.emoji)||a.emoji||'🛒'}</div>
-        <div class="dash-app-card__body">
-          <div class="dash-app-card__name">${a.name}</div>
-          <div class="dash-app-card__meta">
-            <span class="tag">${a.category || 'App'}</span>
-            <span class="tag">Comprado</span>
+        <div class="dash-app-card__top">
+          <div class="dash-app-card__logo">${(a.logo&&a.logo.emoji)||a.emoji||'🛒'}</div>
+          <div class="dash-app-card__body">
+            <div class="dash-app-card__name">${a.name}</div>
+            <div class="dash-app-card__meta">
+              <span class="tag">${a.category || 'App'}</span>
+              <span class="tag">Comprado</span>
+            </div>
           </div>
         </div>
-        <button class="btn btn--sm btn--primary" onclick="event.stopPropagation(); Dashboard.openApp('purchased', ${purchased.indexOf(a)})">▶ Executar</button>
+        <div class="dash-app-card__actions" onclick="event.stopPropagation()">
+          <button class="btn btn--sm btn--primary" onclick="Dashboard.openApp('purchased', ${purchased.indexOf(a)})">▶ Executar</button>
+        </div>
       </div>`).join('');
   },
 
