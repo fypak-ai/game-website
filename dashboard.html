@@ -172,10 +172,25 @@
     </div>
 
   </div>
+<!-- ── App Execution Modal ── -->
+<div class="modal hidden" id="appModal">
+  <div class="modal__overlay" onclick="UI.closeModal()"></div>
+  <div class="modal__content">
+    <button class="modal__close" onclick="UI.closeModal()">✕</button>
+    <h3 id="modalTitle"></h3>
+    <pre id="modalCode" class="app-code"></pre>
+    <button class="btn btn--primary" id="runAppBtn" onclick="AppStore.runApp()">▶ Executar</button>
+    <div id="appOutput" class="app-output hidden"></div>
+    <iframe id="appFrame" class="app-frame hidden" src="" allow="same-origin" sandbox="allow-same-origin allow-scripts allow-forms"></iframe>
+  </div>
+</div>
+
 </main>
 
 <footer class="footer"><div class="footer__bottom"><p>© 2026 CodePlay.</p></div></footer>
 <script src="js/api.js"></script>
+<script src="js/state.js"></script>
 <script src="js/dashboard.js"></script>
 <script src="js/main.js"></script>
+<script src="js/signals.js"></script>
 </body></html>
