@@ -21,6 +21,13 @@
   }
   // expose for other scripts
   window._cpLoggedIn = loggedIn;
+  // Ocultar Home link e Start Creating Now btn quando logado
+  if (loggedIn) {
+    var gs = document.createElement('style');
+    gs.id = 'logged-in-style';
+    gs.textContent = '.nav__link--home { display: none !important; } #startCreatingBtn { display: none !important; }';
+    document.head.appendChild(gs);
+  }
 })();
 </script>
 </head>
@@ -33,7 +40,7 @@
         <span class="logo__text">CodePlay</span>
       </a>
       <nav class="nav" id="nav">
-        <a href="index.html" class="nav__link active">Home</a>
+        <a href="index.html" class="nav__link active nav__link--home">Home</a>
         <a href="playground.html" class="nav__link">Playground</a>
         <a href="store.html" class="nav__link">Loja</a>
         <a href="community.html" class="nav__link">Comunidade</a>
@@ -45,7 +52,7 @@
       <a href="chat.html" class="nav__link">Chat</a>
       <a href="account.html" class="nav__link">Conta</a>
     </nav>
-      <a href="playground.html" class="btn btn--primary">Start Creating Now</a>
+      <a href="playground.html" class="btn btn--primary" id="startCreatingBtn">Start Creating Now</a>
       <button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
     </div>
   </header>
