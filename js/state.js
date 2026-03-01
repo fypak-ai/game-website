@@ -55,9 +55,18 @@ const State = {
         logo: { emoji: '🔒', color: '#ef4444' },
         cloakAction: true,
         createdAt: Date.now() - 86400000 * 7 },
+,
+    { id: 'seed_cloner', name: 'Clonador de App',
+      desc: '⚠️ USO ÚNICO — Clona um dos seus apps, gerando uma cópia idêntica com novo ID. Após o uso, o Clonador desaparece permanentemente da sua conta.',
+      price: 1500, category: 'Utilitários',
+      code: '// App especial — uso único. Clona um app da sua conta.',
+      logo: { emoji: '🧬', color: '#0891b2' },
+      cloneAction: true,
+      oneUse: true,
+      createdAt: Date.now() - 86400000 * 3 }
     ];
     State.setApps(seed);
-    localStorage.setItem(this.SEEDED_KEY, '4'); // v4: cloak app + R$1000 create cost
+    localStorage.setItem(this.SEEDED_KEY, '5'); // v5: cloner app (1-use, 1500 moedas) // v4: cloak app + R$1000 create cost
   }
 };
 
@@ -142,6 +151,9 @@ const UI = {
       if (btnEl)  { btnEl.textContent = '▶ Executar'; }
     }
     modal._currentApp = app;
+    // ── One-use warning ──
+    const oneUseWarn = document.getElementById('oneUseWarning');
+    if (oneUseWarn) oneUseWarn.style.display = (app.oneUse || app.cloneAction) ? 'block' : 'none';
     modal.classList.remove('hidden');
   }
 };
@@ -224,6 +236,73 @@ const AppStore = {
           <div style="color:#555;font-size:.75rem;margin-top:1rem">Execute novamente para renovar o tempo.</div>
         </div>`;
       }
+      return;
+    }
+    // ── Clone Action apps (1 uso) ──
+    if (app.cloneAction) {
+      const currentUser = (() => { try { return JSON.parse(localStorage.getItem('cp_currentUser') || 'null'); } catch { return null; } })();
+      if (!currentUser) { alert('Faça login para usar o Clonador.'); return; }
+      // Gather user's owned apps (excluding seed_cloner itself and other special apps)
+      const allApps = State.getApps();
+      const owned = State.getOwned();
+      const clonable = allApps.filter(a => owned.includes(a.id) && a.id !== 'seed_cloner' && !a.cloneAction && !a.cloakAction);
+      const output = document.getElementById('appOutput');
+      const frameEl = document.getElementById('appFrame');
+      if (frameEl) frameEl.classList.add('hidden');
+      if (!output) return;
+      output.classList.remove('hidden');
+      if (clonable.length === 0) {
+        output.innerHTML = `<div style="padding:1.5rem;text-align:center;line-height:2">
+          <div style="font-size:3rem">🧬</div>
+          <div style="font-size:1rem;font-weight:700;color:#f59e0b;margin:.5rem 0">NENHUM APP PARA CLONAR</div>
+          <div style="color:#aaa;font-size:.85rem">Você não possui apps elegíveis na sua conta.<br>Compre apps na loja primeiro.</div>
+        </div>`;
+        return;
+      }
+      // Build selection UI
+      const optionsHtml = clonable.map(a =>
+        `<button onclick="window._doCloneApp('${a.id}')" style="display:block;width:100%;margin:.35rem 0;padding:.6rem 1rem;background:#1e293b;border:1px solid #334155;border-radius:8px;color:#f1f5f9;cursor:pointer;text-align:left;font-size:.9rem;">
+          ${(a.logo && a.logo.emoji) ? a.logo.emoji : '📦'} ${a.name}
+        </button>`
+      ).join('');
+      output.innerHTML = `<div style="padding:1.25rem">
+        <div style="font-size:1.8rem;text-align:center;margin-bottom:.5rem">🧬</div>
+        <div style="font-weight:700;color:#38bdf8;text-align:center;margin-bottom:.25rem">CLONADOR DE APP</div>
+        <div style="color:#f59e0b;font-size:.8rem;text-align:center;margin-bottom:1rem">⚠️ USO ÚNICO — Escolha o app a ser clonado:</div>
+        ${optionsHtml}
+      </div>`;
+      // One-use executor
+      window._doCloneApp = function(sourceId) {
+        const src = State.getApps().find(a => a.id === sourceId);
+        if (!src) return;
+        // Create clone
+        const clone = Object.assign({}, src, {
+          id: 'clone_' + Date.now(),
+          name: 'Clone de ' + src.name,
+          desc: '[CLONADO] ' + (src.desc || ''),
+          createdAt: Date.now()
+        });
+        // Add clone to apps list and to owned
+        const apps = State.getApps();
+        apps.unshift(clone);
+        State.setApps(apps);
+        State.addOwned(clone.id);
+        // Remove seed_cloner from owned and from apps (1-use: gone after use)
+        const newOwned = State.getOwned().filter(id => id !== 'seed_cloner');
+        State.setOwned(newOwned);
+        const appsAfter = State.getApps().filter(a => a.id !== 'seed_cloner');
+        State.setApps(appsAfter);
+        // Show success
+        output.innerHTML = `<div style="padding:1.5rem;text-align:center;line-height:2">
+          <div style="font-size:3rem">✅</div>
+          <div style="font-size:1rem;font-weight:700;color:#22c55e;margin:.5rem 0">APP CLONADO COM SUCESSO!</div>
+          <div style="color:#aaa;font-size:.85rem">"${clone.name}" foi adicionado à sua conta.</div>
+          <div style="color:#ef4444;font-size:.78rem;margin-top:.75rem">O Clonador foi consumido e removido permanentemente.</div>
+        </div>`;
+        delete window._doCloneApp;
+        // refresh store/dashboard if open
+        if (typeof Store !== 'undefined' && Store.render) Store.render();
+      };
       return;
     }
     // ── Regular JS apps — sandbox iframe approach ──
