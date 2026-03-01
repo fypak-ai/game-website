@@ -66,6 +66,7 @@
       <select id="storeCategory" onchange="Store.filter()" class="filter-select">
         <option value="">Todas categorias</option>
         <option value="Utilitário">Utilitário</option>
+        <option value="Utilitários">Utilitários</option>
         <option value="Jogo">Jogo</option>
         <option value="Social">Social</option>
         <option value="Produtividade">Produtividade</option>
@@ -90,6 +91,9 @@
       <button class="modal__close" onclick="UI.closeModal()">✕</button>
       <h3 id="modalTitle"></h3>
       <pre id="modalCode" class="app-code"></pre>
+      <div id="oneUseWarning" style="display:none;margin:.5rem 0;padding:.5rem .85rem;background:#451a03;border:1px solid #f59e0b;border-radius:8px;color:#fbbf24;font-size:.82rem;text-align:center;">
+        ⚠️ <strong>USO ÚNICO</strong> — Este app desaparece após ser utilizado.
+      </div>
       <button class="btn btn--primary" id="runAppBtn" onclick="AppStore.runApp()">▶ Executar</button>
       <div id="appOutput" class="app-output hidden"></div>
       <iframe id="appFrame" class="app-frame hidden" src="" allow="same-origin" sandbox="allow-same-origin allow-scripts allow-forms"></iframe>
