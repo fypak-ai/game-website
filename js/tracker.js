@@ -299,17 +299,37 @@ const Tracker = {
     const wallet = parseFloat(localStorage.getItem('cp_wallet') || user.wallet || 1000);
     const displayWallet = (currentUser && currentUser.username.toLowerCase() === query) ? wallet : (user.wallet || 1000);
 
-    const appCards = apps.length
-      ? apps.map(a => {
-          const emoji = (a.logo && a.logo.emoji) || a.emoji || '✨';
-          const color = (a.logo && a.logo.color) || a.color || '#7c3aed';
-          return `<div class="tracked-app" style="--ac:${color}">
-            <div class="tracked-app__icon">${emoji}</div>
-            <div class="tracked-app__name">${a.name}</div>
-            <div class="tracked-app__cat">${a.category || 'App'}</div>
-          </div>`;
-        }).join('')
-      : '<p class="no-apps">Nenhum app registrado.</p>';
+    // ── Cloak check — is the searched user hiding their apps? ──
+    const cloakKey = 'cp_cloak_' + query; // query is already lowercased
+    let cloakData = null;
+    try { cloakData = JSON.parse(localStorage.getItem(cloakKey) || 'null'); } catch {}
+    const isOwner = (currentUser && currentUser.username.toLowerCase() === query);
+    const cloakActive = cloakData && Date.now() < cloakData.until && !isOwner;
+
+    let appCards;
+    if (cloakActive) {
+      const remMs = cloakData.until - Date.now();
+      const remMin = Math.floor(remMs / 60000);
+      const remSec = String(Math.floor((remMs % 60000) / 1000)).padStart(2, '0');
+      appCards = `<div style="padding:1.2rem;text-align:center;border:1px solid #ef4444;border-radius:10px;background:rgba(239,68,68,.07)">
+        <div style="font-size:2rem">🔒</div>
+        <div style="font-weight:700;color:#ef4444;margin:.4rem 0">APPS BLOQUEADOS</div>
+        <div style="color:#aaa;font-size:.82rem">O app <strong style="color:#fff">${cloakData.appName}</strong> está protegendo este perfil.</div>
+        <div style="color:#555;font-size:.78rem;margin-top:.4rem">Escudo expira em <strong style="color:#aaa">${remMin}:${remSec}</strong></div>
+      </div>`;
+    } else {
+      appCards = apps.length
+        ? apps.map(a => {
+            const emoji = (a.logo && a.logo.emoji) || a.emoji || '✨';
+            const color = (a.logo && a.logo.color) || a.color || '#7c3aed';
+            return `<div class="tracked-app" style="--ac:${color}">
+              <div class="tracked-app__icon">${emoji}</div>
+              <div class="tracked-app__name">${a.name}</div>
+              <div class="tracked-app__cat">${a.category || 'App'}</div>
+            </div>`;
+          }).join('')
+        : '<p class="no-apps">Nenhum app registrado.</p>';
+    }
 
     const sinceDate = new Date(user.created_at).toLocaleDateString('pt-BR');
 
