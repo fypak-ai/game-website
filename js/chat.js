@@ -219,7 +219,7 @@ function generateChatMissions() {
     ...m,
     instanceId: m.id + '_' + Date.now(),
     startedAt: Date.now(),
-    deadline: Date.now() + m.time * 1000,
+    deadline: Date.now() + 60 * 1000, // 1 min to accept
     status: 'available',
   }));
   s.accepted = s.accepted || [];
@@ -245,7 +245,7 @@ function renderSidebar() {
 
 function renderSidebarMissions() {
   const s = CS.s;
-  const missions = (s.currentMissions || []).filter(m => m.status === 'available');
+  const missions = (s.currentMissions || []).filter(m => m.status === 'available' && m.deadline > Date.now());
   const el = document.getElementById('sidebarMissions');
   if (!el) return;
   if (!missions.length) {
@@ -432,16 +432,17 @@ function pollAcceptedMissions() {
       addMessage({ kind:'system', icon:'✅', text:`Ação detectada para "${m.title}"! Volte ao Chat e clique Confirmar para receber a recompensa.`, ts: Date.now() });
       renderSidebar();
     }
-    if (Date.now() > m.deadline && m.status !== 'expired') {
+    // Only expire missions still in the "available" pool, never accepted/in_progress
+    if (Date.now() > m.deadline && m.status === 'available') {
       m.status = 'expired';
       CS.save(s);
       renderSidebar();
     }
   });
-  // clean expired from accepted
-  const before = (s.accepted||[]).length;
-  s.accepted = (s.accepted||[]).filter(m => m.status !== 'expired');
-  if (s.accepted.length !== before) { CS.save(s); renderSidebar(); }
+  // Remove expired only from the available pool (never touch accepted missions)
+  const before = (s.currentMissions||[]).length;
+  s.currentMissions = (s.currentMissions||[]).filter(m => m.status !== 'expired');
+  if ((s.currentMissions||[]).length !== before) { CS.save(s); renderSidebar(); }
 }
 
 // ── Mission cycle timer ───────────────────────────────────────
