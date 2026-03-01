@@ -249,7 +249,7 @@ const AppStore = {
       // Gather user's owned apps (excluding seed_cloner itself and other special apps)
       const allApps = State.getApps();
       const owned = State.getOwned();
-      const clonable = allApps.filter(a => owned.includes(a.id) && a.id !== 'seed_cloner' && !a.cloneAction && !a.cloakAction);
+      const clonable = allApps.filter(a => a.id !== 'seed_cloner' && !a.cloneAction && !a.cloakAction);
       const output = document.getElementById('appOutput');
       const frameEl = document.getElementById('appFrame');
       if (frameEl) frameEl.classList.add('hidden');
