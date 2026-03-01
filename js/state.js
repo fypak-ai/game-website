@@ -31,7 +31,7 @@ const State = {
   },
 
   seedApps() {
-    if (localStorage.getItem(this.SEEDED_KEY) === '3') return; // re-seed if v1/v2
+    if (localStorage.getItem(this.SEEDED_KEY) === '5') return;
     const seed = [
       { id: 'seed_tracker', name: 'Rastreador de Credenciais', 
         desc: 'App hacker fictício — rastreie logins e senhas fictícias de qualquer usuário do CodePlay.',
@@ -65,7 +65,11 @@ const State = {
       oneUse: true,
       createdAt: Date.now() - 86400000 * 3 }
     ];
-    State.setApps(seed);
+    // Merge: keep user-created apps, just add missing seed apps
+    const existing = State.getApps();
+    const existingIds = existing.map(a => a.id);
+    const toAdd = seed.filter(a => !existingIds.includes(a.id));
+    State.setApps([...toAdd, ...existing]);
     localStorage.setItem(this.SEEDED_KEY, '5'); // v5: cloner app (1-use, 1500 moedas) // v4: cloak app + R$1000 create cost
   }
 };
