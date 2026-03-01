@@ -39,7 +39,8 @@
 
 /* ── App cards ────────────────────────────────────────────────── */
 .dash-apps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: .9rem; }
-.dash-app-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; display: flex; align-items: flex-start; gap: .75rem; position: relative; }
+.dash-app-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; display: flex; flex-direction: column; gap: .6rem; position: relative; }
+.dash-app-card__top { display: flex; align-items: flex-start; gap: .75rem; }
 .dash-app-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--ac,var(--primary)); border-radius:var(--radius) 0 0 var(--radius); }
 .dash-app-card__logo { font-size: 2rem; flex-shrink: 0; }
 .dash-app-card__body { flex: 1; min-width: 0; }
@@ -83,8 +84,11 @@
 .dash-app-card__actions {
   display: flex;
   gap: .4rem;
-  flex-shrink: 0;
   align-items: center;
+  justify-content: flex-end;
+  margin-top: .1rem;
+  padding-top: .5rem;
+  border-top: 1px solid var(--border);
 }
 
 /* ── Execution Modal (reuse from playground) ───────── */
