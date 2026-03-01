@@ -240,29 +240,8 @@ const MS = {
   isLoggedIn() { return !!(localStorage.getItem('cp_token') && localStorage.getItem('cp_user')); }
 };
 
-// ── Timer ──────────────────────────────────────────────────────
-let _timerInt = null;
-function startTimer() {
-  const s = MS.s;
-  if (!s.nextRefresh || Date.now() > s.nextRefresh) generateMissions();
-  if (_timerInt) clearInterval(_timerInt);
-  _timerInt = setInterval(tick, 1000);
-  tick();
-}
-function tick() {
-  const s = MS.s;
-  const rem = Math.max(0, Math.floor((s.nextRefresh - Date.now()) / 1000));
-  const pct = ((MISSION_INTERVAL - rem) / MISSION_INTERVAL) * 100;
-  const mm = String(Math.floor(rem/60)).padStart(2,'0');
-  const ss = String(rem%60).padStart(2,'0');
-  const el = document.getElementById('timerCount');
-  const fill = document.getElementById('timerFill');
-  if(el)   el.textContent = `${mm}:${ss}`;
-  if(fill) fill.style.width = pct+'%';
-  if(rem === 0) generateMissions();
-  // Poll for real completions
-  checkPendingCompletions();
-}
+// ── Poll ────────────────────────────────────────────────────────
+setInterval(checkPendingCompletions, 3000);
 
 // ── Generate ───────────────────────────────────────────────────
 function generateMissions() {
@@ -356,10 +335,7 @@ function renderMissions() {
   if(!grid) return;
   if(!active.length){ grid.innerHTML='<p class="empty-hint">⏳ Aguardando próximo ciclo...</p>'; return; }
   grid.innerHTML = active.map(m=>{
-    const rem = Math.max(0, Math.floor((m.deadline - Date.now())/1000));
-    const mm = String(Math.floor(rem/60)).padStart(2,'0');
-    const ss = String(rem%60).padStart(2,'0');
-    const urg = rem <= 0 ? 'mission-card--expired' : rem < 10 ? 'mission-card--urgent' : rem < 30 ? 'mission-card--warning' : '';
+    const urg = '';
     const verified = checkVerified(m);
     return `<div class="mission-card ${urg}" style="--m-color:${m.color}">
       <div class="mission-card__head">
@@ -375,7 +351,6 @@ function renderMissions() {
         <span class="reward-xp">+${m.xp} XP</span>
         <span class="reward-money">+R$ ${m.money.toFixed(2)}</span>
       </div>
-      <div class="mission-timer-mini">⏱️ ${mm}:${ss}</div>
       <div class="mission-actions">
         <a href="${m.link}" class="btn btn--primary btn--sm">🎯 ${m.action}</a>
         <button class="btn btn--sm btn--complete ${verified?'':'btn--locked'}" onclick="Missions.manualComplete('${m.instanceId}')">
@@ -472,4 +447,4 @@ function showToast(msg, type='info') {
 }
 
 // ── Boot ───────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded',()=>{ renderAll(); startTimer(); });
+document.addEventListener('DOMContentLoaded',()=>{ generateMissions(); renderAll(); });
