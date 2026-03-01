@@ -1,8 +1,8 @@
-// ── CodePlay API Client ─────────────────────────────────────────
-// Reads API_URL from localStorage (set via account.html) or falls back to local
+// -- CodePlay API Client --
+// Reads API_URL from localStorage (set via account.html) or falls back to Railway
 const API = {
   get BASE() {
-    return localStorage.getItem('cp_api_url') || 'https://codeplay-api.up.railway.app';
+    return localStorage.getItem('cp_api_url') || 'https://codeplay-backend-production.up.railway.app';
   },
   get token() { return localStorage.getItem('cp_token') || ''; },
   set token(v) { if(v) localStorage.setItem('cp_token',v); else localStorage.removeItem('cp_token'); },
@@ -16,7 +16,7 @@ const API = {
     };
     if(body) opts.body = JSON.stringify(body);
     const r = await fetch(this.BASE + path, opts);
-    const data = await r.json().catch(()=>({error:'Resposta inválida'}));
+    const data = await r.json().catch(()=>({error:'Resposta invalida'}));
     if(!r.ok) throw new Error(data.error || 'Erro '+r.status);
     return data;
   },
