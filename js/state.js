@@ -399,6 +399,133 @@ const AppStore = {
 </script></body></html>`;
       }
 
+
+      // ── LUZES PISCANTES / ANIMAÇÃO SWING ──
+      else if (/jframe|jwindow|swing|awt/.test(lc) && (/timer|pisca|blink|flash|ligad|apagad|oval|filloval|animation|anima|light|luz/.test(lc))) {
+        interactiveHtml = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<style>
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:#0d1117; color:#c9d1d9; font-family:'Segoe UI',sans-serif; display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; gap:1rem; }
+  .panel { background:#161b22; border:1px solid #30363d; border-radius:16px; padding:1.5rem 2rem; text-align:center; min-width:340px; }
+  h2 { color:#58a6ff; font-size:.95rem; margin-bottom:1.25rem; letter-spacing:1px; }
+  canvas { border-radius:12px; background:#1a1a2e; display:block; margin:0 auto; }
+  .controls { display:flex; gap:.75rem; justify-content:center; margin-top:1rem; flex-wrap:wrap; }
+  .btn { background:#21262d; border:1px solid #30363d; color:#c9d1d9; border-radius:8px; padding:.45rem 1rem; cursor:pointer; font-size:.82rem; transition:all .15s; }
+  .btn:hover { background:#30363d; }
+  .btn.active { background:#58a6ff; color:#0d1117; border-color:#58a6ff; }
+  .log { font-family:monospace; font-size:.72rem; color:#8b949e; margin-top:.75rem; min-height:1.2rem; }
+  .speed-row { display:flex; align-items:center; gap:.5rem; margin-top:.6rem; font-size:.8rem; color:#8b949e; }
+  input[type=range] { width:120px; accent-color:#58a6ff; }
+  .status { font-size:.75rem; color:#4ade80; margin-top:.4rem; }
+</style></head><body>
+<div class="panel">
+  <h2>☕ ${className}</h2>
+  <canvas id="cv" width="300" height="120"></canvas>
+  <div class="controls">
+    <button class="btn active" id="toggleBtn" onclick="toggle()">⏸ Pausar</button>
+    <button class="btn" onclick="setMode('sync')">🔁 Sincronizado</button>
+    <button class="btn" onclick="setMode('chase')">🌀 Sequencial</button>
+    <button class="btn" onclick="setMode('rainbow')">🌈 Rainbow</button>
+  </div>
+  <div class="speed-row">
+    <span>Velocidade:</span>
+    <input type="range" min="100" max="2000" value="500" id="spd" oninput="setSpeed(this.value)">
+    <span id="spdVal">500ms</span>
+  </div>
+  <div class="status" id="status">🟢 Timer ativo — 500ms</div>
+  <div class="log" id="log">[JVM] LuzesPiscantes iniciado ✓</div>
+</div>
+<script>
+  const cv = document.getElementById('cv');
+  const ctx = cv.getContext('2d');
+  const COLORS = ['#ef4444','#22c55e','#3b82f6'];
+  const OFF = '#374151';
+  let on = true, running = true, mode = 'sync', speed = 500, chase = 0;
+  let interval = null;
+
+  function draw() {
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const cx = [75,150,225], cy = 60, r = 40;
+    cx.forEach((x,i) => {
+      let color;
+      if (!on) { color = OFF; }
+      else if (mode === 'sync') { color = COLORS[i]; }
+      else if (mode === 'chase') { color = (i === chase % 3) ? COLORS[i] : OFF; }
+      else { // rainbow
+        const h = (chase*40 + i*120) % 360;
+        color = \`hsl(\${h},90%,55%)\`;
+      }
+      // Glow effect
+      if (on && (mode !== 'chase' || i === chase % 3)) {
+        ctx.save();
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 22;
+        ctx.beginPath(); ctx.arc(x,cy,r,0,Math.PI*2);
+        ctx.fillStyle = color + '44'; ctx.fill();
+        ctx.restore();
+      }
+      // Circle
+      ctx.beginPath(); ctx.arc(x,cy,r,0,Math.PI*2);
+      const grad = ctx.createRadialGradient(x-r*.25,cy-r*.25,r*.1,x,cy,r);
+      grad.addColorStop(0, on && (mode !== 'chase' || i === chase%3) ? lighten(color) : '#4b5563');
+      grad.addColorStop(1, on && (mode !== 'chase' || i === chase%3) ? color : OFF);
+      ctx.fillStyle = grad; ctx.fill();
+      ctx.strokeStyle = '#1f2937'; ctx.lineWidth = 2; ctx.stroke();
+    });
+  }
+
+  function lighten(hex) {
+    try {
+      const r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
+      return \`rgb(\${Math.min(r+80,255)},\${Math.min(g+80,255)},\${Math.min(b+80,255)})\`;
+    } catch { return hex; }
+  }
+
+  function addLog(msg) {
+    const l = document.getElementById('log');
+    l.textContent = msg;
+  }
+
+  function tick() {
+    on = !on;
+    if (mode === 'chase') { if (on) chase++; }
+    else if (mode === 'rainbow') { chase++; on = true; }
+    draw();
+    addLog(\`[Timer] Estado: \${on?'LIGADA':'APAGADA'} | Modo: \${mode} | \${speed}ms\`);
+  }
+
+  function startInterval() {
+    if (interval) clearInterval(interval);
+    interval = setInterval(tick, speed);
+  }
+
+  function toggle() {
+    running = !running;
+    const btn = document.getElementById('toggleBtn');
+    if (running) { startInterval(); btn.textContent='⏸ Pausar'; btn.classList.add('active'); }
+    else { clearInterval(interval); btn.textContent='▶ Continuar'; btn.classList.remove('active'); }
+    document.getElementById('status').textContent = running ? \`🟢 Timer ativo — \${speed}ms\` : '🔴 Pausado';
+  }
+
+  function setMode(m) {
+    mode = m; chase = 0; on = true;
+    document.querySelectorAll('.btn').forEach(b => { if (['🔁 Sincronizado','🌀 Sequencial','🌈 Rainbow'].some(t=>b.textContent.includes(t.split(' ')[1]))) b.classList.remove('active'); });
+    event.target.classList.add('active');
+    startInterval(); draw();
+  }
+
+  function setSpeed(v) {
+    speed = parseInt(v);
+    document.getElementById('spdVal').textContent = speed + 'ms';
+    document.getElementById('status').textContent = running ? \`🟢 Timer ativo — \${speed}ms\` : '🔴 Pausado';
+    if (running) startInterval();
+  }
+
+  draw();
+  startInterval();
+</script></body></html>\`;
+      }
+
       // ── QUIZ / PERGUNTAS ──
       else if (/quiz|pergunta|resposta|alternativa|questao|question|answer/.test(lc)) {
         const questions = [
