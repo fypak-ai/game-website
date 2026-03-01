@@ -74,7 +74,7 @@ const Dashboard = {
     }
     if (empty) empty.classList.add('hidden');
     if (grid) grid.innerHTML = apps.map((a, i) => `
-      <div class="dash-app-card" style="--ac:${(a.logo&&a.logo.color)||a.color||'#7c3aed'}">
+      <div class="dash-app-card dash-app-card--clickable" style="--ac:${(a.logo&&a.logo.color)||a.color||'#7c3aed'}" onclick="Dashboard.openApp('created', ${i})">
         <div class="dash-app-card__logo">${(a.logo&&a.logo.emoji)||a.emoji||'✨'}</div>
         <div class="dash-app-card__body">
           <div class="dash-app-card__name">${a.name}</div>
@@ -85,7 +85,10 @@ const Dashboard = {
           </div>
           <p class="dash-app-card__desc">${a.description || ''}</p>
         </div>
-        <button class="btn btn--sm btn--danger-outline" onclick="Dashboard.deleteApp(${i}, this)">🗑️</button>
+        <div class="dash-app-card__actions" onclick="event.stopPropagation()">
+          <button class="btn btn--sm btn--primary" onclick="Dashboard.openApp('created', ${i})">▶ Executar</button>
+          <button class="btn btn--sm btn--danger-outline" onclick="Dashboard.deleteApp(${i}, this)">🗑️</button>
+        </div>
       </div>`).join('');
   },
 
@@ -132,7 +135,7 @@ const Dashboard = {
     }
     if (empty) empty.classList.add('hidden');
     if (grid) grid.innerHTML = purchased.map(a => `
-      <div class="dash-app-card" style="--ac:${(a.logo&&a.logo.color)||a.color||'#22c55e'}">
+      <div class="dash-app-card dash-app-card--clickable" style="--ac:${(a.logo&&a.logo.color)||a.color||'#22c55e'}" onclick="Dashboard.openApp('purchased', ${purchased.indexOf(a)})">
         <div class="dash-app-card__logo">${(a.logo&&a.logo.emoji)||a.emoji||'🛒'}</div>
         <div class="dash-app-card__body">
           <div class="dash-app-card__name">${a.name}</div>
@@ -141,6 +144,7 @@ const Dashboard = {
             <span class="tag">Comprado</span>
           </div>
         </div>
+        <button class="btn btn--sm btn--primary" onclick="event.stopPropagation(); Dashboard.openApp('purchased', ${purchased.indexOf(a)})">▶ Executar</button>
       </div>`).join('');
   },
 
@@ -164,6 +168,20 @@ const Dashboard = {
         <span class="reward-money">+R$ ${(m.earnedMoney || 0).toFixed(2)}</span>
         <span class="miss-row__when">${new Date(m.completedAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</span>
       </div>`).join('');
+  },
+
+  openApp(source, idx) {
+    let apps;
+    if (source === 'created') {
+      apps = (() => { try { return JSON.parse(localStorage.getItem('cp_apps') || '[]'); } catch { return []; } })();
+    } else {
+      apps = (() => { try { return JSON.parse(localStorage.getItem('cp_owned') || '[]'); } catch { return []; } })();
+    }
+    const app = apps[idx];
+    if (!app) return;
+    // Ensure logo exists (some apps use legacy emoji/color fields)
+    if (!app.logo) app.logo = { emoji: app.emoji || '✨', color: app.color || '#7c3aed' };
+    UI.openModal(app);
   },
 
   deleteApp(idx, btn) {
